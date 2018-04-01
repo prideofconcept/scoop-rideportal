@@ -7,13 +7,13 @@ import router from './router'
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   if(requiresAuth) {
-    next('/sign-in');
+    next('/sign-in')
   } else {
-    next();
+    next()
   }
-});
+})
 
 /* eslint-disable no-new */
 new Vue({
