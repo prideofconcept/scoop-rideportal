@@ -1,9 +1,25 @@
 <template>
-  <div>
-    <h1>Please Sign In</h1>
-    <h2>Essential Links</h2>
-    <h2>Ecosystem</h2>
-  </div>
+	<div>
+	<h1>Please Sign In</h1>
+	<v-form v-model="valid">
+
+		<v-text-field
+			label="email"
+			v-model="email"
+			:rules="emailRules"
+			required
+		></v-text-field>
+
+		<v-text-field
+			label="Password"
+			v-model="password"
+			:counter="10"
+			type="password"
+			required
+		></v-text-field>
+
+	</v-form>
+	</div>
 </template>
 
 <script>
@@ -11,7 +27,8 @@ export default {
   name: 'Login',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App!'
+      email: '',
+      password: ''
     }
   }
 }
