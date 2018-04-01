@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'SignIn',
+  name: 'Login',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App!'
