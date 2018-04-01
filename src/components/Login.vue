@@ -13,6 +13,7 @@
 		<v-text-field
 			label="Password"
 			v-model="password"
+			:rules="passwordRules"
 			:counter="10"
 			type="password"
 			required
@@ -27,8 +28,16 @@ export default {
   name: 'Login',
   data () {
     return {
-      email: '',
-      password: ''
+	    valid: false,
+	    password: '',
+	    passwordRules: [
+		    v => !!v || 'Password is required',
+	    ],
+	    email: '',
+	    emailRules: [
+		    v => !!v || 'E-mail is required',
+		    v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+	    ]
     }
   }
 }

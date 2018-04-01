@@ -24,10 +24,5 @@ new Vue({
   el: '#app',
   router,
   components: { App },
-  template: `
-	<v-app>
-		<v-content>
-            <App/>
-		</v-content>
-	</v-app>`
+  template: `<App/>`
 })
