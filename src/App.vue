@@ -2,13 +2,13 @@
 <v-app>
 	<v-navigation-drawer app></v-navigation-drawer>
 	<v-content>
-		<v-container id="app" fluid >
+	<v-container id="app" fluid >
 
-			<img src="./assets/logo.png">
-			<v-spacer></v-spacer>
-			<router-view/>
+		<img src="./assets/logo.png">
+		<v-spacer></v-spacer>
+		<router-view/>
 
-		</v-container>
+	</v-container>
 	</v-content>
 </v-app>
 </template>
