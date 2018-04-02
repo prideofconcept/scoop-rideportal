@@ -6,19 +6,19 @@ import Login from '@/components/Login'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'dashboard',
-      component: HelloWorld,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
-    }
-  ]
+	routes: [
+		{
+			path: '/',
+			name: 'dashboard',
+			component: HelloWorld,
+			meta: {
+				requiresAuth: true
+			}
+		},
+		{
+			path: '/login',
+			name: 'login',
+			component: Login
+		}
+	]
 })

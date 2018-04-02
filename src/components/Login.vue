@@ -26,40 +26,39 @@
 </template>
 
 <script>
-import firebase from '../firebase';
+import firebase from '../firebase'
 
 export default {
 	name: 'Login',
 	data () {
 		return {
-		    valid: false,
-		    password: '',
-		    passwordRules: [
-			    v => !!v || 'Password is required',
-		    ],
-		    email: '',
-		    emailRules: [
-			    v => !!v || 'E-mail is required',
-			    v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-		    ]
+			valid: false,
+			password: '',
+			passwordRules: [
+				v => !!v || 'Password is required'
+			],
+			email: '',
+			emailRules: [
+				v => !!v || 'E-mail is required',
+				v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+			]
 		}
 	},
 	methods: {
-		login: function(e) {
+		login: function (e) {
 			firebase
 				.auth()
 				.signInWithEmailAndPassword(this.email, this.password)
 				.then(
 					user => {
-						console.log(`You are logged in as ${user.email}`);
-						this.$router.go({ path: this.$router.path });
+						console.log(`You are logged in as ${user.email}`)
+						this.$router.go({ path: this.$router.path })
 					},
 					err => {
-						console.log('login error:',err.message);
+						console.log('login error:', err.message)
 					}
-				);
-			e.preventDefault();
-
+				)
+			e.preventDefault()
 		}
 	}
 }

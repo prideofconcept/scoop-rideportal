@@ -11,20 +11,20 @@ import 'babel-polyfill'
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  if(requiresAuth) {
-    next('/login')
-  } else {
-    next()
-  }
+	const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+	if(requiresAuth) {
+		next('/login')
+	} else {
+		next()
+	}
 })
 
 Vue.use(Vuetify)
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
+	el: '#app',
+	router,
 	store,
-  components: { App },
-  template: `<App/>`
+	components: { App },
+	template: `<App/>`
 })
