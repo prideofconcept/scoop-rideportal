@@ -19,11 +19,15 @@
 			required
 		></v-text-field>
 
+		<v-btn v-on:click="login" >Login</v-btn>
+
 	</v-form>
 	</div>
 </template>
 
 <script>
+import firebase from '../firebase';
+
 export default {
 	name: 'Login',
 	data () {
@@ -38,6 +42,24 @@ export default {
 			    v => !!v || 'E-mail is required',
 			    v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
 		    ]
+		}
+	},
+	methods: {
+		login: function(e) {
+			firebase
+				.auth()
+				.signInWithEmailAndPassword(this.email, this.password)
+				.then(
+					user => {
+						console.log(`You are logged in as ${user.email}`);
+						this.$router.go({ path: this.$router.path });
+					},
+					err => {
+						console.log('login error:',err.message);
+					}
+				);
+			e.preventDefault();
+
 		}
 	}
 }
