@@ -25,38 +25,38 @@
 
 <script>
 export default {
-  name: 'Login',
-  data () {
-    return {
-	    valid: false,
-	    password: '',
-	    passwordRules: [
-		    v => !!v || 'Password is required',
-	    ],
-	    email: '',
-	    emailRules: [
-		    v => !!v || 'E-mail is required',
-		    v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-	    ]
-    }
-  }
+	name: 'Login',
+	data () {
+		return {
+		    valid: false,
+		    password: '',
+		    passwordRules: [
+			    v => !!v || 'Password is required',
+		    ],
+		    email: '',
+		    emailRules: [
+			    v => !!v || 'E-mail is required',
+			    v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+		    ]
+		}
+	}
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+	h1, h2 {
+		font-weight: normal;
+	}
+	ul {
+		list-style-type: none;
+		padding: 0;
+	}
+	li {
+		display: inline-block;
+		margin: 0 10px;
+	}
+	a {
+		color: #42b983;
+	}
 </style>
