@@ -4,8 +4,19 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-	store: {},
+	store: {
+		user: null,
+		events: []
+	},
 	getters: {},
-	mutations: {},
-	actions: {}
+	mutations: {
+		setUser (state, payload) {
+			state.user = payload
+		}
+	},
+	actions: {
+		userLoggedin ({commit}, payload) {
+			commit('setUser', payload)
+		}
+	}
 })

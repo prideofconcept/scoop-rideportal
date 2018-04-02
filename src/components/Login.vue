@@ -52,7 +52,8 @@ export default {
 				.then(
 					user => {
 						console.log(`You are logged in as ${user.email}`)
-						this.$router.go({ path: this.$router.path })
+						this.$store.dispatch('userLoggedin', user)
+						this.$router.push('/')
 					},
 					err => {
 						console.log('login error:', err.message)

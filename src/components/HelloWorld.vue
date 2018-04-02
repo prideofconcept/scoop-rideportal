@@ -90,6 +90,11 @@ export default {
 		return {
 			msg: 'Welcome to Your Vue.js App!'
 		}
+	},
+	computed: {
+		userIsAuthenticated () {
+			return this.$store.getters.user !== null
+		}
 	}
 }
 </script>
