@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from './firebase'
 
+// todo: organize this with modules - https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/store/modules/auth.js
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -13,8 +15,13 @@ export default new Vuex.Store({
 		user (state) {
 			return state.user || firebase.auth().currentUser
 		},
-		isUserAuthed (state) {
-			return (state.user !== null && state.user !== undefined)
+		isAuthenticated (state) {
+			const lsUser = Vue.localStorage.get('user');
+			if(lsUser !== undefined && lsUser !== null) {
+				state.user = JSON.parse(lsUser)
+			}
+
+			return (state.user !== null && state.user !== undefined )
 		},
 		events (state) {
 			return state.events
@@ -24,7 +31,7 @@ export default new Vuex.Store({
 		setUser (state, payload) {
 			state.user = payload
 
-			localstorage.setItem('user', payload.user)
+			Vue.localStorage.set('user', JSON.stringify(payload))
 		},
 
 		setEvents (state, payload) {

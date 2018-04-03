@@ -1,13 +1,13 @@
 <template>
 <div>
-<h1>{{ msg }}</h1>
-<h2>Calendar Events</h2>
-<ul>
-<li v-for="item in events">
-    {{ item.summary }}
-  </li>
+	<h1>Upcoming Rides</h1>
+	<h3>{{ msg }}</h3>
+	<ul>
+	<li :key="item.id" v-for="item in events">
+	    {{ item }}
+	</li>
 
-</ul>
+	</ul>
 
 </div>
 </template>
@@ -17,13 +17,15 @@ export default {
 	name: 'HelloWorld',
 	data () {
 		return {
-			msg: 'Welcome to Your Vue.js App!',
-			events: this.$store.getters.events
+			msg: `${this.$store.getters.user.displayName} :: here are your rides`,
 		}
 	},
 	computed: {
 		userIsAuthenticated () {
 			return this.$store.getters.user !== null
+		},
+		events () {
+			return this.$store.state.events
 		}
 	},
 	created () {
