@@ -1,16 +1,11 @@
 <template>
-<div class="hello">
+<div>
 <h1>{{ msg }}</h1>
 <h2>Calendar Events</h2>
 <ul>
-<li>
-<a
-	href="https://vuejs.org"
-	target="_blank"
->
-Core Docs
-</a>
-</li>
+<li v-for="item in events">
+    {{ item.summary }}
+  </li>
 
 </ul>
 
@@ -22,7 +17,8 @@ export default {
 	name: 'HelloWorld',
 	data () {
 		return {
-			msg: 'Welcome to Your Vue.js App!'
+			msg: 'Welcome to Your Vue.js App!',
+			events: this.$store.getters.events
 		}
 	},
 	computed: {
@@ -31,25 +27,7 @@ export default {
 		}
 	},
 	created () {
-		this.$getGapiClient().then(gapi => {
-			console.log('test',gapi.auth2.getAuthInstance().isSignedIn.get())
-			if ( !gapi.auth2.getAuthInstance().isSignedIn.get() ) {
-				gapi.auth2.getAuthInstance().signIn();
-			}
-
-			gapi.client.calendar.events.list({
-				'calendarId': 'primary',
-				'timeMin': (new Date()).toISOString(),
-				'showDeleted': false,
-				'singleEvents': true,
-				'maxResults': 10,
-				'orderBy': 'startTime'
-			}).then(function(response) {
-				var events = response.result.items;
-				console.log(events);
-			});
-
-		})
+		this.$store.dispatch('GET_EVENTS', {$getGapiClient: this.$getGapiClient})
 	}
 }
 </script>

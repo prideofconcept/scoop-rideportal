@@ -15,25 +15,43 @@ export default new Vuex.Store({
 		},
 		isUserAuthed (state) {
 			return (state.user !== null && state.user !== undefined)
+		},
+		events (state) {
+			return state.events
 		}
 	},
 	mutations: {
 		setUser (state, payload) {
 			state.user = payload
 
-			/*
-			[types.LOGIN_SUCCESS] (state, payload) {
-			state.token = payload.token
-			state.user = payload.user
-			state.authenticated = true
-			localstorage.setItem('token', payload.token)
 			localstorage.setItem('user', payload.user)
-			*/
+		},
+
+		setEvents (state, payload) {
+			console.log('setEvents -> ', payload)
+			state.events = payload.events;
 		}
 	},
 	actions: {
 		LOGIN_SUCCESS ({commit}, payload) {
 			commit('setUser', payload)
+		},
+
+		GET_EVENTS ({commit}, payload) {
+			payload.$getGapiClient().then(gapi => {
+				if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
+					gapi.auth2.getAuthInstance().signIn()
+				}
+
+				gapi.client.calendar.events.list({
+					'calendarId': 'primary',
+					'timeMin': (new Date()).toISOString(),
+					'showDeleted': false,
+					'singleEvents': true,
+					'maxResults': 10,
+					'orderBy': 'startTime'
+				}).then( (response) => commit('setEvents', {events: response.result.items}) )
+			})
 		}
 	}
 })
