@@ -52,7 +52,7 @@ export default {
 				.then(
 					user => {
 						console.log(`You are logged in as ${user.email}`)
-						this.$store.dispatch('userLoggedin', user)
+						this.$store.dispatch('LOGIN_SUCCESS', user)
 						this.$router.push('/')
 					},
 					err => {
