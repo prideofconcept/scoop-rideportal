@@ -1,18 +1,29 @@
 <template>
-<div>
-	<h1>Upcoming Rides</h1>
-	<h3>{{ msg }}</h3>
-	<ul>
-	<li :key="item.id" v-for="item in events">
-	    {{ item }}
-	</li>
+<v-layout>
+	<v-flex xs12 sm6 offset-sm3>
+		<h1>Upcoming Rides</h1>
+		<h3>{{ msg }}</h3>
+		<v-card :key="item.id" v-for="item in events">
+		    {{ item }}
+			<v-card-title>
+				<h2>{{item.summary}}</h2>
+			</v-card-title>
+			<v-card-text>
+				<p></p>
+			</v-card-text>
+			<!--<v-card-actions>-->
+				<!--<v-btn xs12 flat>Start Ride</v-btn>-->
+				<!--<v-btn flat>Nav:Pickup</v-btn>-->
+				<!--<v-btn flat>Nav:Drop-Off</v-btn>-->
+			<!--</v-card-actions>-->
+		</v-card>
+	</v-flex>
 
-	</ul>
-
-</div>
+</v-layout>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
 	name: 'HelloWorld',
 	data () {
@@ -21,15 +32,12 @@ export default {
 		}
 	},
 	computed: {
-		userIsAuthenticated () {
-			return this.$store.getters.user !== null
-		},
 		events () {
 			return this.$store.state.events
 		}
 	},
 	created () {
-		this.$store.dispatch('GET_EVENTS', {$getGapiClient: this.$getGapiClient})
+		//this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
 	}
 }
 </script>

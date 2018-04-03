@@ -34,20 +34,6 @@ router.beforeEach((to, from, next) => {
 	} else {
 		next()
 	}
-
-	/*
-	let user = localstorage.getItem('user')
-    let token = localstorage.getItem('token')
-    if (user && token) {
-      store.commit(types.LOGIN_SUCCESS, {token, user})
-      next()
-    }
-    else if (!store.getters.isAuthenticated) {
-      store.dispatch(types.LOGIN).then(() => next())
-    } else {
-      next()
-    }
-	* */
 })
 
 /* eslint-disable no-new */
@@ -56,7 +42,11 @@ new Vue({
 	router,
 	store,
 	components: { App },
-	template: `<App/>`
+	template: `<App/>`,
+	created () {
+		// todo: add in created functions from  https://github.com/academind/yt-devmeetup-vue-firebase/blob/14-save-firebase-check-auth/src/main.js
+		this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
+	}
 })
 
 

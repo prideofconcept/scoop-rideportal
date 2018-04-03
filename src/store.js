@@ -21,9 +21,9 @@ export default new Vuex.Store({
 				state.user = JSON.parse(lsUser)
 			}
 
-			return (state.user !== null && state.user !== undefined )
+			return (state.user !== null && state.user !== undefined)
 		},
-		events (state) {
+		loadedEvents (state) {
 			return state.events
 		}
 	},
@@ -36,7 +36,7 @@ export default new Vuex.Store({
 
 		setEvents (state, payload) {
 			console.log('setEvents -> ', payload)
-			state.events = payload.events;
+			state.events = payload.events
 		}
 	},
 	actions: {
@@ -44,7 +44,7 @@ export default new Vuex.Store({
 			commit('setUser', payload)
 		},
 
-		GET_EVENTS ({commit}, payload) {
+		GET_CALRIDES ({commit}, payload) {
 			payload.$getGapiClient().then(gapi => {
 				if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
 					gapi.auth2.getAuthInstance().signIn()
