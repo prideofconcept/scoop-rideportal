@@ -21,12 +21,14 @@ export default new Vuex.Store({
 		setUser (state, payload) {
 			state.user = payload
 
-				/*[types.LOGIN_SUCCESS] (state, payload) {
-				state.token = payload.token
-				state.user = payload.user
-				state.authenticated = true
-				localstorage.setItem('token', payload.token)
-				localstorage.setItem('user', payload.user)*/
+			/*
+			[types.LOGIN_SUCCESS] (state, payload) {
+			state.token = payload.token
+			state.user = payload.user
+			state.authenticated = true
+			localstorage.setItem('token', payload.token)
+			localstorage.setItem('user', payload.user)
+			*/
 		}
 	},
 	actions: {
