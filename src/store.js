@@ -36,7 +36,8 @@ export default new Vuex.Store({
 
 		setEvents (state, payload) {
 			console.log('setEvents -> ', payload)
-			state.events = payload.events
+			Vue.set(state, 'events', payload.events)
+
 		}
 	},
 	actions: {
