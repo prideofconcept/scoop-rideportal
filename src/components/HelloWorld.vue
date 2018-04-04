@@ -1,22 +1,24 @@
 <template>
 <v-layout>
-	<v-flex xs12 sm6 offset-sm3>
+	<v-flex xs12 >
 		<h1>Upcoming Rides</h1>
 		<h3>{{ msg }}</h3>
-		<v-card :key="item.id" v-for="item in events">
-		    {{ item }}
+		<v-flex xs12>
+		<v-card color="blue-grey darken-2" class="white--text mb-4" :key="ride.id" v-for="ride in rides">
 			<v-card-title>
-				<h2>{{item.summary}}</h2>
+				<h2 class="headline">{{ride.summary}}</h2>
 			</v-card-title>
 			<v-card-text>
-				<p></p>
+				<p>pickup: {{ride.location}} <v-btn small flat color="primary" dark href="http://maps.google.com/?daddr=">Nav</v-btn> </p>
+				<p>drop-off: <span v-html="ride.description"></span> </p>
+				<p>notes: </p>
 			</v-card-text>
-			<!--<v-card-actions>-->
-				<!--<v-btn xs12 flat>Start Ride</v-btn>-->
-				<!--<v-btn flat>Nav:Pickup</v-btn>-->
-				<!--<v-btn flat>Nav:Drop-Off</v-btn>-->
-			<!--</v-card-actions>-->
+			<v-card-actions class="white--text">
+				<v-btn block >Start Ride</v-btn>
+
+			</v-card-actions>
 		</v-card>
+		</v-flex>
 	</v-flex>
 
 </v-layout>
@@ -32,9 +34,12 @@ export default {
 		}
 	},
 	computed: {
-		events () {
+		rides () {
 			return this.$store.state.events
 		}
+	},
+	methods: {
+		clickLink () {}
 	},
 	created () {
 		//this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})

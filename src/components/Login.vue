@@ -1,5 +1,6 @@
 <template>
-	<div>
+<v-layout>
+	<v-flex xs12 >
 	<h1>Please Sign In</h1>
 	<v-form v-model="valid">
 
@@ -22,7 +23,8 @@
 		<v-btn v-on:click="login" >Login</v-btn>
 
 	</v-form>
-	</div>
+	</v-flex>
+</v-layout>
 </template>
 
 <script>
