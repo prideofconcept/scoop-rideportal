@@ -7,9 +7,8 @@ import axios from 'axios'
 // todo: organize this with modules - https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/store/modules/auth.js
 
 Vue.use(Vuex)
-console.log(firebaseApp)
 export default new Vuex.Store({
-	store: {
+	state: {
 		user: null,
 		events: []
 	},
@@ -19,12 +18,8 @@ export default new Vuex.Store({
 		},
 		isAuthenticated (state) {
 			// do we need to add in : https://stackoverflow.com/questions/37873608/how-do-i-detect-if-a-user-is-already-logged-in-firebase
-			var user = firebaseApp.auth().currentUser
+			var user = state.user
 			// const lsUser = Vue.localStorage.get('user')
-
-			if(user !== undefined && user !== null) {
-				state.user = user
-			}
 
 			return (user !== null && user !== undefined)
 		},
@@ -33,9 +28,8 @@ export default new Vuex.Store({
 		}
 	},
 	mutations: {
-		setUser (state, payload) {
+		setUser: (state, payload) => {
 			state.user = payload
-
 			Vue.localStorage.set('user', JSON.stringify(payload))
 		},
 
@@ -50,8 +44,7 @@ export default new Vuex.Store({
 		},
 
 		GET_CALRIDES_FIREBASE ({commit, state}, payload) {
-			console.log('test')
-			console.log('test', state.user.getToken())
+			console.log('GET_CALRIDES_FIREBASE:', state.user.getToken())
 			firebaseApp.auth().currentUser.getToken().then(function (token) {
 				console.log('Sending request to', this.helloUserUrl, 'with ID token in Authorization header.')
 				axios({
