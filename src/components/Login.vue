@@ -62,6 +62,10 @@ export default {
 					}
 				)
 			e.preventDefault()
+		},
+		mounted () {
+			console.log('test')
+			// this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
 		}
 	}
 }

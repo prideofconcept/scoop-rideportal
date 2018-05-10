@@ -27,15 +27,6 @@ Vue.use(Vuetify)
 Vue.use(VueGAPI, gapiConfig)
 Vue.use(VueLocalStorage)
 
-router.beforeEach((to, from, next) => {
-	const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-	if(requiresAuth && store.getters.isAuthenticated === false) {
-		next('/login')
-	} else {
-		next()
-	}
-})
-
 /* eslint-disable no-new */
 new Vue({
 	el: '#app',
@@ -45,8 +36,6 @@ new Vue({
 	template: `<App/>`,
 	created () {
 		// todo: add in created functions from  https://github.com/academind/yt-devmeetup-vue-firebase/blob/14-save-firebase-check-auth/src/main.js
-		this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
+		// this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
 	}
 })
-
-

@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import firebase from './firebase'
+
+import firebaseApp from './firebase'
+import axios from 'axios'
 
 // todo: organize this with modules - https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/store/modules/auth.js
 
 Vue.use(Vuex)
-
+console.log(firebaseApp)
 export default new Vuex.Store({
 	store: {
 		user: null,
@@ -13,15 +15,18 @@ export default new Vuex.Store({
 	},
 	getters: {
 		user (state) {
-			return state.user || firebase.auth().currentUser
+			return state.user || firebaseApp.auth().currentUser
 		},
 		isAuthenticated (state) {
-			const lsUser = Vue.localStorage.get('user');
-			if(lsUser !== undefined && lsUser !== null) {
-				state.user = JSON.parse(lsUser)
+			// do we need to add in : https://stackoverflow.com/questions/37873608/how-do-i-detect-if-a-user-is-already-logged-in-firebase
+			var user = firebaseApp.auth().currentUser
+			// const lsUser = Vue.localStorage.get('user')
+
+			if(user !== undefined && user !== null) {
+				state.user = user
 			}
 
-			return (state.user !== null && state.user !== undefined)
+			return (user !== null && user !== undefined)
 		},
 		loadedEvents (state) {
 			return state.events
@@ -37,12 +42,32 @@ export default new Vuex.Store({
 		setEvents (state, payload) {
 			console.log('setEvents -> ', payload)
 			Vue.set(state, 'events', payload.events)
-
 		}
 	},
 	actions: {
 		LOGIN_SUCCESS ({commit}, payload) {
 			commit('setUser', payload)
+		},
+
+		GET_CALRIDES_FIREBASE ({commit, state}, payload) {
+			console.log('test')
+			console.log('test', state.user.getToken())
+			firebaseApp.auth().currentUser.getToken().then(function (token) {
+				console.log('Sending request to', this.helloUserUrl, 'with ID token in Authorization header.')
+				axios({
+					method: 'GET',
+					url: 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetriveCalendar',
+					data: {
+						email: 'test@yetigo.io'
+					},
+					headers: {
+						'Authorization': 'Bearer ' + token
+					}
+				}).then(response => {
+					console.log(response.data)
+					commit('setEvents', {events: response.result.items})
+				})
+			}.bind(this))
 		},
 
 		GET_CALRIDES ({commit}, payload) {
@@ -53,12 +78,12 @@ export default new Vuex.Store({
 
 				gapi.client.calendar.events.list({
 					'calendarId': 'primary',
-					'timeMin': (new Date()).toISOString(),
+					// 'timeMin': (new Date()).toISOString(), // todo add timeMin back into api call
 					'showDeleted': false,
 					'singleEvents': true,
 					'maxResults': 10,
 					'orderBy': 'startTime'
-				}).then( (response) => commit('setEvents', {events: response.result.items}) )
+				}).then((response) => commit('setEvents', {events: response.result.items}))
 			})
 		}
 	}

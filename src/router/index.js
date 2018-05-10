@@ -2,10 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Login from '@/components/Login'
+import store from '@/store'
 
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
 	routes: [
 		{
 			path: '/',
@@ -22,3 +23,15 @@ export default new Router({
 		}
 	]
 })
+
+router.beforeEach((to, from, next) => {
+	const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+	console.log(store.getters.isAuthenticated, 'test')
+	if(requiresAuth && store.getters.isAuthenticated === false) {
+		next('/login')
+	} else {
+		next()
+	}
+})
+
+export default router

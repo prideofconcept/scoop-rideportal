@@ -4,20 +4,7 @@
 		<h1>Upcoming Rides</h1>
 		<h3>{{ msg }}</h3>
 		<v-flex xs12>
-		<v-card color="blue-grey darken-2" class="white--text mb-4" :key="ride.id" v-for="ride in rides">
-			<v-card-title>
-				<h2 class="headline">{{ride.summary}}</h2>
-			</v-card-title>
-			<v-card-text>
-				<p>pickup: {{ride.location}} <v-btn small flat color="primary" dark href="http://maps.google.com/?daddr=">Nav</v-btn> </p>
-				<p>drop-off: <span v-html="ride.description"></span> </p>
-				<p>notes: </p>
-			</v-card-text>
-			<v-card-actions class="white--text">
-				<v-btn block >Start Ride</v-btn>
-
-			</v-card-actions>
-		</v-card>
+			<ride-item-overview v-for="ride in rides" v-bind:key="ride.id" v-bind:ride="ride"></ride-item-overview>
 		</v-flex>
 	</v-flex>
 
@@ -25,12 +12,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import RideItemOverview from './RideItemOverview'
 export default {
+	components: {RideItemOverview},
 	name: 'HelloWorld',
 	data () {
 		return {
-			msg: `${this.$store.getters.user.displayName} :: here are your rides`,
+			msg: `${this.$store.getters.user.displayName} :: here are your rides`
 		}
 	},
 	computed: {
@@ -42,7 +30,8 @@ export default {
 		clickLink () {}
 	},
 	created () {
-		//this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
+		this.$store.dispatch('GET_CALRIDES_FIREBASE')
+		// this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
 	}
 }
 </script>
