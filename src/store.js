@@ -18,6 +18,7 @@ export default new Vuex.Store({
 		},
 		isAuthenticated (state) {
 			// do we need to add in : https://stackoverflow.com/questions/37873608/how-do-i-detect-if-a-user-is-already-logged-in-firebase
+			// or - https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/store/modules/auth.js - see getStoredAuth
 			var user = state.user
 			// const lsUser = Vue.localStorage.get('user')
 
@@ -44,21 +45,22 @@ export default new Vuex.Store({
 		},
 
 		GET_CALRIDES_FIREBASE ({commit, state}, payload) {
-			console.log('GET_CALRIDES_FIREBASE:', state.user.getToken())
-			firebaseApp.auth().currentUser.getToken().then(function (token) {
+			console.log('GET_CALRIDES_FIREBASE:', state.user.getIdToken())
+			firebaseApp.auth().currentUser.getToken().then(function (authToken) {
 				console.log('Sending request to', this.helloUserUrl, 'with ID token in Authorization header.')
-				axios({
+				const api_url = 'https://us-central1-yetigo-3b1de.cloudfunctions.net/httpsGetRetriveCalendar/'
+				//const api_url = 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetriveCalendar/'
+				axios.get(api_url, {
 					method: 'GET',
-					url: 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetriveCalendar',
-					data: {
-						email: 'test@yetigo.io'
+					params: {
+						email: 'drivers@scoopus.io'
 					},
 					headers: {
-						'Authorization': 'Bearer ' + token
+						'Authorization': 'Bearer ' + authToken
 					}
 				}).then(response => {
 					console.log(response.data)
-					commit('setEvents', {events: response.result.items})
+					commit('setEvents', response.data)
 				})
 			}.bind(this))
 		},
