@@ -1,23 +1,23 @@
 <template>
 
-	<v-card color="blue-grey darken-2" class="white--text mb-4">
-		<v-card-title>
+	<div color="blue-grey darken-2" class="white--text mb-4">
+		<div class="row">
 			<h2 class="headline">{{ride.summary}}</h2>
-		</v-card-title>
-		<v-card-text>
+		</div>
+		<div class="row">
 			<p>pickup: {{ride.location}}
-				<v-btn  small flat dark v-bind:href="pickupHref" target="_blank"><v-icon>navigation</v-icon></v-btn>
+				<button  small flat dark v-bind:href="pickupHref" target="_blank"><i>navigation</i></button>
 			</p>
 			<p>drop-off: <span v-html="ride.description"></span>
-				<v-btn samll flat dark v-bind:href="dropoffHref" target="_blank"><v-icon>near_me</v-icon></v-btn>
+				<button samll flat dark v-bind:href="dropoffHref" target="_blank"><i>near_me</i></button>
 			</p>
 			<p>notes:</p>
-		</v-card-text>
-		<v-card-actions class="white--text">
-			<v-btn block >Start Ride</v-btn>
+		</div>
+		<div class="white--text">
+			<button block >Start Ride</button>
 
-		</v-card-actions>
-	</v-card>
+		</div>
+	</div>
 
 </template>
 

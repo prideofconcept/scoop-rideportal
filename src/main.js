@@ -1,7 +1,6 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import Vuetify from 'vuetify'
 
 import App from './App'
 import router from './router'
@@ -9,7 +8,6 @@ import store from './store'
 import VueGAPI from 'vue-gapi'
 import VueLocalStorage from 'vue-localstorage'
 
-import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 import 'babel-polyfill'
 
 Vue.config.productionTip = false
@@ -23,7 +21,6 @@ const gapiConfig = {
 	// see all available scopes here: https://developers.google.com/identity/protocols/googlescopes'
 }
 
-Vue.use(Vuetify)
 Vue.use(VueGAPI, gapiConfig)
 Vue.use(VueLocalStorage)
 

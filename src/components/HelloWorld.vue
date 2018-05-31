@@ -1,14 +1,14 @@
 <template>
-<v-layout>
-	<v-flex xs12 >
+<div class="row">
+	<div class="col-12">
 		<h1>Upcoming Rides</h1>
 		<h3>{{ msg }}</h3>
-		<v-flex xs12>
+		<div col-xol-12>
 			<ride-item-overview v-for="ride in rides" v-bind:key="ride.id" v-bind:ride="ride"></ride-item-overview>
-		</v-flex>
-	</v-flex>
+		</div>
+	</div>
 
-</v-layout>
+</div>
 </template>
 
 <script>

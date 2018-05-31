@@ -1,30 +1,33 @@
 <template>
-<v-layout>
-	<v-flex xs12 >
+<div>
+	<div class="flex row" >
 	<h1>Please Sign In</h1>
-	<v-form v-model="valid">
+	<form v-on:submit.prevent.stop="login">
 
-		<v-text-field
-			label="email"
-			v-model="email"
-			:rules="emailRules"
-			required
-		></v-text-field>
+             <div class="form-group">
+                <input
+	                v-model.trim="email"
+	                class="form-control"
+	                type="email"
+	                placeholder="Email"
+	                required>
+             </div>
 
-		<v-text-field
-			label="Password"
-			v-model="password"
-			:rules="passwordRules"
-			:counter="10"
-			type="password"
-			required
-		></v-text-field>
+             <div class="form-group">
+                <input
+	                v-model.trim="password"
+	                class="form-control"
+	                type="password"
+	                minlength="6"
+	                placeholder="Password"
+	                required>
+             </div>
 
-		<v-btn v-on:click="login" >Login</v-btn>
+		<button type="submit" >Login</button>
 
-	</v-form>
-	</v-flex>
-</v-layout>
+	</form>
+	</div>
+</div>
 </template>
 
 <script>
