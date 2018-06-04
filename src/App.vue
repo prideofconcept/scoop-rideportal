@@ -1,6 +1,6 @@
 <template>
 <div id="app" class="container">
-	<img src="./assets/logo.png">
+	<img class="logo p-5" src="./assets/scoop-handmark.png">
 	<router-view/>
 </div>
 </template>
@@ -19,4 +19,8 @@ export default {
 	text-align: center;
 	color: #2c3e50;
 }
+
+	.logo {
+		max-width: 250px;
+	}
 </style>

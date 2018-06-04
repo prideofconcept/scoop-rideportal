@@ -3,10 +3,13 @@
 	<div class="col-12">
 		<h1>Upcoming Rides</h1>
 		<h3>{{ msg }}</h3>
-		<div col-xol-12>
+
+		<div class="row">
 			<ride-item-overview v-for="ride in rides" v-bind:key="ride.id" v-bind:ride="ride"></ride-item-overview>
 		</div>
 	</div>
+
+
 
 </div>
 </template>
