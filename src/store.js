@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import firebaseApp from './firebase'
+import Firestore from '@/firebase/firestore'
 import axios from 'axios'
 
 // todo: organize this with modules - https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/store/modules/auth.js
@@ -45,8 +46,8 @@ export default new Vuex.Store({
 		},
 
 		GET_CALRIDES_FIREBASE ({commit, state}, payload) {
-			console.log('GET_CALRIDES_FIREBASE:', state.user.getIdToken())
-			firebaseApp.auth().currentUser.getToken().then(function (authToken) {
+			//console.log('GET_CALRIDES_FIREBASE:', state.user.getIdToken())
+			firebaseApp.auth().currentUser.getIdToken().then(function (authToken) {
 				console.log('Sending request to', this.helloUserUrl, 'with ID token in Authorization header.')
 				const api_url = 'https://us-central1-yetigo-3b1de.cloudfunctions.net/httpsGetRetriveCalendar/'
 				//const api_url = 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetriveCalendar/'

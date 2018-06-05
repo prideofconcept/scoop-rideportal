@@ -55,9 +55,10 @@ export default {
 				.auth()
 				.signInWithEmailAndPassword(this.email, this.password)
 				.then(
-					user => {
-						console.log(`You are logged in as ${user.email}`)
-						this.$store.dispatch('LOGIN_SUCCESS', user)
+					data => {
+						debugger
+						console.log(`You are logged in as ${data.user.email}`)
+						this.$store.dispatch('LOGIN_SUCCESS', data.user)
 						this.$router.push('/')
 					},
 					err => {
