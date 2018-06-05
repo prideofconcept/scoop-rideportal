@@ -80,6 +80,10 @@ export default new Vuex.Store({
 					'orderBy': 'startTime'
 				}).then((response) => commit('setEvents', {events: response.result.items}))
 			})
+		},
+
+		startRide ({commit, state}, payload) {
+			console.log('starting ride');
 		}
 	}
 })
