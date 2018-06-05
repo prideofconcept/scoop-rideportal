@@ -70,7 +70,7 @@ export default new Vuex.Store({
 					'orderBy': 'startTime'
 				}).then((response) => commit('setEvents', {events: response.result.items}))
 			})
-		},
+		}
 
 
 	}

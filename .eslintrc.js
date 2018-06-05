@@ -28,6 +28,7 @@ module.exports = {
 
   	'keyword-spacing': 'off',
   	"indent": [1, "tab"],
-  	"no-tabs": 0
+  	"no-tabs": 0,
+	"comma-dangle": 'off'
   }
 }
