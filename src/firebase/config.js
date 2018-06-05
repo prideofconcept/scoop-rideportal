@@ -1,4 +1,4 @@
-//todo: load from firebase env vars
+// todo: load from firebase env vars
 export default {
 	apiKey: 'AIzaSyBOrnRjGh5HUYxAQHxo6XXFNx8fPbyIZvQ',
 	authDomain: 'yetigo-3b1de.firebaseapp.com',

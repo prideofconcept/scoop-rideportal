@@ -40,9 +40,9 @@ export default {
 
 	},
 	methods: {
-		onStartRide: function(e){
+		onStartRide: function (e) {
 			console.log('click')
-			this.$store.dispatch('startRide');
+			this.$store.dispatch('startRide')
 		}
 	},
 	created () {

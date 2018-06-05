@@ -1,39 +1,30 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import firebaseApp from './firebase'
+import firebaseApp from '@/firebase/'
 import Firestore from '@/firebase/firestore'
 import axios from 'axios'
+
+import RidesModule from './modules/rides'
+import AccountModule from './modules/account'
 
 // todo: organize this with modules - https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/store/modules/auth.js
 
 Vue.use(Vuex)
 export default new Vuex.Store({
+	modules: {
+		ride: RidesModule(),
+		account: AccountModule()
+	},
 	state: {
-		user: null,
 		events: []
 	},
 	getters: {
-		user (state) {
-			return state.user || firebaseApp.auth().currentUser
-		},
-		isAuthenticated (state) {
-			// do we need to add in : https://stackoverflow.com/questions/37873608/how-do-i-detect-if-a-user-is-already-logged-in-firebase
-			// or - https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/store/modules/auth.js - see getStoredAuth
-			var user = state.user
-			// const lsUser = Vue.localStorage.get('user')
-
-			return (user !== null && user !== undefined)
-		},
 		loadedEvents (state) {
 			return state.events
 		}
 	},
 	mutations: {
-		setUser: (state, payload) => {
-			state.user = payload
-			Vue.localStorage.set('user', JSON.stringify(payload))
-		},
 
 		setEvents (state, payload) {
 			console.log('setEvents -> ', payload)
@@ -41,9 +32,7 @@ export default new Vuex.Store({
 		}
 	},
 	actions: {
-		LOGIN_SUCCESS ({commit}, payload) {
-			commit('setUser', payload)
-		},
+
 
 		GET_CALRIDES_FIREBASE ({commit, state}, payload) {
 			//console.log('GET_CALRIDES_FIREBASE:', state.user.getIdToken())
@@ -83,8 +72,6 @@ export default new Vuex.Store({
 			})
 		},
 
-		startRide ({commit, state}, payload) {
-			console.log('starting ride');
-		}
+
 	}
 })
