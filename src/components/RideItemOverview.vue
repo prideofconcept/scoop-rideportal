@@ -41,8 +41,8 @@ export default {
 	},
 	methods: {
 		onStartRide: function (e) {
-			console.log('click')
-			this.$store.dispatch('startRide')
+			console.log('click', this.ride.id)
+			this.$store.dispatch('startRide', this.ride)
 		}
 	},
 	created () {
