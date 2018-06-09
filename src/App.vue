@@ -6,8 +6,13 @@
 </template>
 
 <script>
+import firebase from '@/firebase/'
 export default {
-	name: 'App'
+	name: 'App',
+	mounted () {
+		// todo consider doing user login check here
+		const user = firebase.auth().currentUser;
+	},
 }
 </script>
 

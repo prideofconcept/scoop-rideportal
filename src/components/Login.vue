@@ -1,8 +1,10 @@
 <template>
 <div>
-	<div class="flex row" >
-	<h1>Please Sign In</h1>
-	<form v-on:submit.prevent.stop="login">
+	<div class="flex row">
+	<div class="col-12 m-4">
+		<h1>Please Sign In</h1>
+	</div>
+	<form class="col-12" v-on:submit.prevent.stop="login">
 
              <div class="form-group">
                 <input
@@ -23,7 +25,7 @@
 	                required>
              </div>
 
-		<button type="submit" >Login</button>
+		<button type="submit" class="mt-4 btn">Login</button>
 
 	</form>
 	</div>
@@ -31,11 +33,12 @@
 </template>
 
 <script>
-import firebase from '../firebase'
+import firebaseApp from '../firebase'
+import * as firebase from 'firebase'
 
 export default {
 	name: 'Login',
-	data () {
+	data() {
 		return {
 			valid: false,
 			password: '',
@@ -51,25 +54,37 @@ export default {
 	},
 	methods: {
 		login: function (e) {
-			firebase
+			const email = this.email
+			const pass = this.password
+			firebaseApp.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+				.then(this.loginUser.apply(this))
+				.catch( function (error) {
+					// Handle Errors here.
+					var errorCode = error.code
+					var errorMessage = error.message
+					// todo: handle error - console.log(errorMessage)
+				})
+
+			e.preventDefault()
+		},
+		loginUser: function() {
+			firebaseApp
 				.auth()
 				.signInWithEmailAndPassword(this.email, this.password)
 				.then(
 					data => {
-						console.log(`You are logged in as ${data.user.email}`)
-						this.$store.dispatch('LOGIN_SUCCESS', data.user)
-						this.$router.push('/')
+						// console.log(`You are logged in as ${data.user.email}`);
+						this.$store.dispatch('LOGIN_SUCCESS', data.user);
 					},
 					err => {
-						console.log('login error:', err.message)
+						// todo: handle error - console.log('login error:', err.message)
 					}
 				)
-			e.preventDefault()
-		},
-		mounted () {
-			console.log('test')
-			// this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
 		}
+	},
+	mounted() {
+		console.log('test login component', firebase.auth().currentUser)
+		// this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
 	}
 }
 </script>
@@ -79,14 +94,17 @@ export default {
 	h1, h2 {
 		font-weight: normal;
 	}
+
 	ul {
 		list-style-type: none;
 		padding: 0;
 	}
+
 	li {
 		display: inline-block;
 		margin: 0 10px;
 	}
+
 	a {
 		color: #42b983;
 	}

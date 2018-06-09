@@ -1,6 +1,7 @@
+import * as firebase from 'firebase'
+import router from '@/router'
+
 import firebaseApp from '@/firebase/'
-import Firestore from '@/firebase/firestore'
-import VueLocalStorage from 'vue-localstorage'
 
 // todo do we need to organize an api file like this: https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/api/index.js
 export default () => ({
@@ -9,11 +10,10 @@ export default () => ({
 	},
 	getters: {
 		user (state) {
-			console.log('firebaseApp.auth().currentUser', firebaseApp.auth().currentUser)
-			return state.user || firebaseApp.auth().currentUser
+			return state.user || firebase.auth().currentUser
 		},
 		isAuthenticated (state) {
-			console.log('firebaseApp.auth().currentUser', firebaseApp.auth().currentUser)
+			console.log('firebaseApp.auth().currentUser', firebase.auth().currentUser)
 
 			// do we need to add in : https://stackoverflow.com/questions/37873608/how-do-i-detect-if-a-user-is-already-logged-in-firebase
 			// or - https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/store/modules/auth.js - see getStoredAuth
@@ -32,6 +32,7 @@ export default () => ({
 	actions: {
 		LOGIN_SUCCESS ({commit}, payload) {
 			commit('setUser', payload)
+			router.push('/')
 		}
 	}
 })

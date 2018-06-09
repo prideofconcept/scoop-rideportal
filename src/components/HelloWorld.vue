@@ -21,7 +21,7 @@ export default {
 	name: 'HelloWorld',
 	data () {
 		return {
-			msg: `${this.$store.getters.user.displayName} :: here are your rides`
+			msg: `${this.$store.getters.user.displayName || this.$store.getters.user.email} :: here are your rides`
 		}
 	},
 	computed: {

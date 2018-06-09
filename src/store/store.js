@@ -38,12 +38,12 @@ export default new Vuex.Store({
 			//console.log('GET_CALRIDES_FIREBASE:', state.user.getIdToken())
 			firebaseApp.auth().currentUser.getIdToken().then(function (authToken) {
 				console.log('Sending request to', this.helloUserUrl, 'with ID token in Authorization header.')
-				const api_url = 'https://us-central1-yetigo-3b1de.cloudfunctions.net/httpsGetRetriveCalendar/'
-				//const api_url = 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetriveCalendar/'
+				//const api_url = 'https://us-central1-yetigo-3b1de.cloudfunctions.net/httpsGetRetrieveCalendar/'
+				const api_url = 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetrieveCalendar/'
 				axios.get(api_url, {
 					method: 'GET',
 					params: {
-						email: 'drivers@scoopus.io'
+						email: state.account.user.email
 					},
 					headers: {
 						'Authorization': 'Bearer ' + authToken
