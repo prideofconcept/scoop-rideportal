@@ -11,7 +11,7 @@ export default {
 	name: 'App',
 	mounted () {
 		// todo consider doing user login check here
-		const user = firebase.auth().currentUser;
+		const user = firebase.auth().currentUser
 	},
 }
 </script>

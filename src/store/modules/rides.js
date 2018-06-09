@@ -1,7 +1,6 @@
-import router from '@/router'
 import Firestore from '@/firebase/firestore'
 
-const rideLogCollection = Firestore.collection("ride_log"); //todo: should the collection come from an env var
+const rideLogCollection = Firestore.collection('ride_log') // todo: should the collection come from an env var
 
 // todo do we need to organize an api file like this: https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/api/index.js
 export default () => ({
@@ -16,36 +15,36 @@ export default () => ({
 		},
 		reportRideStart (state, result) {
 			state.currentRide = result.ride
-			onRide = true
+			state.onRide = true
 		},
 		reportRideEnd (state, result) {
 			state.fetching = false
-		},
+		}
 	},
 	actions: {
-		startRide ({commit, state}, payload) {
-			const ride = payload;
+		startRide ({ commit, state }, payload) {
+			const ride = payload
 			console.log('starting ride', ride)
 
 			const date = new Date()
-			const dateString = `${date.toLocaleString('en-us',{month: 'short'})}:${date.getDate()} ${date.toLocaleTimeString()}`
-
-
+			const dateString = `${date.toLocaleString('en-us', {
+				month: 'short'
+			})}:${date.getDate()} ${date.toLocaleTimeString()}`
 
 			rideLogCollection
-				.doc( dateString + ' :: ' + ride.summary)
+				.doc(dateString + ' :: ' + ride.summary)
 				.set({
 					url: ride.url,
 					sceduled_time: ride.startdate,
 					id: ride.id,
-					driver_id:0,
-					family_id:0,
+					driver_id: 0,
+					family_id: 0,
 					start_time: date
 				})
-				.then(()=>{
+				.then(() => {
 					commit('reportSaveRideLogSuccess', true)
 					commit('reportRideStart', ride)
-				})//todo: handle errors
+				}) // todo: handle errors
 		}
 	}
 })
