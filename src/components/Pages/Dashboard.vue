@@ -1,9 +1,12 @@
 <template>
 <div class="row">
 	<div class="col-12">
-		<h1>Upcoming Rides</h1>
-		<h3>{{ msg }}</h3>
-
+		<h1>Dashboard</h1>
+		<h5>{{ msg }}</h5>
+		<div class="row">
+			<CurrentRideView/>
+		</div>
+		<h3>Upcoming Rides</h3>
 		<div class="row">
 			<ride-item-overview v-for="ride in rides" v-bind:key="ride.id" v-bind:ride="ride"></ride-item-overview>
 		</div>
@@ -13,13 +16,14 @@
 </template>
 
 <script>
-import RideItemOverview from './RideItemOverview'
+import RideItemOverview from '../RideItemOverview'
+import CurrentRideView from '../CurrentRideView'
 export default {
-	components: {RideItemOverview},
+	components: {RideItemOverview, CurrentRideView},
 	name: 'HelloWorld',
 	data () {
 		return {
-			msg: `${this.$store.getters.user.displayName || this.$store.getters.user.email} :: here are your rides`
+			msg: `${this.$store.getters.user.displayName || this.$store.getters.user.email}`
 		}
 	},
 	computed: {

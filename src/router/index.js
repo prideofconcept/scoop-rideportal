@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-import Login from '@/components/Login'
+import Dashboard from '@/components/Pages/Dashboard'
+import Login from '@/components/Pages/Login'
 import store from '@/store/store'
 
 Vue.use(Router)
@@ -11,7 +11,7 @@ let router = new Router({
 		{
 			path: '/',
 			name: 'dashboard',
-			component: HelloWorld,
+			component: Dashboard,
 			meta: {
 				requiresAuth: true
 			}
