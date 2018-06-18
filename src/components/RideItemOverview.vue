@@ -12,7 +12,8 @@
 			<p>notes:</p>
 		</div>
 		<div class="white--text">
-			<button v-on:click.prevent="onStartRide">Start Ride</button>
+			<button v-on:click.prevent="onStartRide" v-if="!isCurrentRide">Start Ride</button>
+			<button v-on:click.prevent="onStopRide" v-if="isCurrentRide">Finish Ride</button>
 
 		</div>
 	</div>
@@ -29,6 +30,7 @@ export default {
 	},
 	data () {
 		return {
+			isCurrentRide: false
 		}
 	},
 	computed: {
@@ -43,6 +45,12 @@ export default {
 		onStartRide: function (e) {
 			console.log('click', this.ride.id)
 			this.$store.dispatch('startRide', this.ride)
+			this.isCurrentRide = true
+		},
+		onStopRide: function (e) {
+			// throw up a warning before allowing this action
+			this.$store.dispatch('stopRide', this.ride)
+			this.isCurrentRide = false
 		}
 	},
 	created () {

@@ -1,6 +1,7 @@
 import Firestore from '@/firebase/firestore'
 
 const rideLogCollection = Firestore.collection('ride_log') // todo: should the collection come from an env var
+const currentRideCollection = Firestore.collection('ride_current') // todo: s houdl the collections be exported from the firebase module
 
 // todo do we need to organize an api file like this: https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/api/index.js
 export default () => ({
@@ -26,25 +27,58 @@ export default () => ({
 			const ride = payload
 			console.log('starting ride', ride)
 
+			// todo: move to util module
 			const date = new Date()
 			const dateString = `${date.toLocaleString('en-us', {
 				month: 'short'
 			})}:${date.getDate()} ${date.toLocaleTimeString()}`
 
 			rideLogCollection
-				.doc(dateString + ' :: ' + ride.summary)
+				.doc(ride.id + ' :: ' + ride.summary)
 				.set({
 					url: ride.url,
 					sceduled_time: ride.startdate,
 					id: ride.id,
-					driver_id: 0,
-					family_id: 0,
+					status: 'started',
 					start_time: date
 				})
 				.then(() => {
 					commit('reportSaveRideLogSuccess', true)
 					commit('reportRideStart', ride)
 				}) // todo: handle errors
+
+			currentRideCollection.doc(`${ride.id} :: ${ride.summary}`)
+				.set({
+					id: ride.id,
+					name: ride.summary,
+					driver_id: 0,
+					family_id: 0,
+				})
+		},
+		stopRide ({ commit, state }, payload) {
+			const ride = payload
+			console.log('stopping ride', ride.id)
+
+			// todo: move to util module
+			const date = new Date()
+			const dateString = `${date.toLocaleString('en-us', {
+				month: 'short'
+			})}:${date.getDate()} ${date.toLocaleTimeString()}`
+
+			rideLogCollection
+				.doc(ride.id + ' :: ' + ride.summary)
+				.set({
+					status: 'finished',
+					stop_time: date
+				}, {merge: true})
+				.then(() => {
+					commit('reportSaveRideLogSuccess', true)
+					commit('reportRideStop', ride)
+				}) // todo: handle errors
+
+			currentRideCollection
+				.doc(`${ride.id} :: ${ride.summary}`)
+				.delete()
 		}
 	}
 })
