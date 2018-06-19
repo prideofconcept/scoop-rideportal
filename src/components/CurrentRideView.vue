@@ -3,7 +3,7 @@
 	<div id="CurrentRideView" class="col-12 white--text my-4 p-4">
 		<h2 class="headline">Current Ride</h2>
 		<div class="row">
-			content
+			{{currentRide.summary}}
 		</div>
 		<div class="white--text">
 			<button >Start Ride</button>
@@ -22,8 +22,8 @@ export default {
 		}
 	},
 	computed: {
-		rides () {
-			return this.$store.state.events
+		currentRide () {
+			return this.$store.state.ride.currentRide
 		},
 	},
 	methods: {

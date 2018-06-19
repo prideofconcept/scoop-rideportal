@@ -5,7 +5,7 @@
 		<h5>{{ msg }} <span v-on:click="logoutUser" class="oi oi-account-logout"></span></h5>
 
 		<div class="row">
-			<CurrentRideView/>
+			<CurrentRideView v-if="currentRide"/>
 		</div>
 		<h3>Upcoming Rides</h3>
 		<div class="row">
@@ -22,7 +22,7 @@ import RideItemOverview from '../RideItemOverview'
 import CurrentRideView from '../CurrentRideView'
 export default {
 	components: {RideItemOverview, CurrentRideView},
-	name: 'HelloWorld',
+	name: 'Dashboard',
 	data () {
 		return {
 			msg: `${this.$store.getters.user.displayName || this.$store.getters.user.email}`
@@ -31,6 +31,9 @@ export default {
 	computed: {
 		rides () {
 			return this.$store.state.events
+		},
+		currentRide () {
+			return this.$store.state.ride.onRide
 		}
 	},
 	methods: {
@@ -50,6 +53,11 @@ export default {
 	created () {
 		this.$store.dispatch('GET_CALRIDES_FIREBASE')
 		// this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
+	},
+
+	updated () {
+		console.log('updateded: currentRide', this.currentRide)
+
 	}
 }
 </script>

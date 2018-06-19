@@ -15,11 +15,12 @@ export default () => ({
 			state.fetching = false
 		},
 		reportRideStart (state, result) {
-			state.currentRide = result.ride
+			state.currentRide = result
 			state.onRide = true
 		},
-		reportRideEnd (state, result) {
-			state.fetching = false
+		reportRideStop (state, result) {
+			state.currentRide = null,
+			state.onRide = false
 		}
 	},
 	actions: {
