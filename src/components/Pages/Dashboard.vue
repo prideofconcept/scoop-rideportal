@@ -2,7 +2,8 @@
 <div class="row">
 	<div class="col-12">
 		<h1>Dashboard</h1>
-		<h5>{{ msg }}</h5>
+		<h5>{{ msg }} <span v-on:click="logoutUser" class="oi oi-account-logout"></span></h5>
+
 		<div class="row">
 			<CurrentRideView/>
 		</div>
@@ -16,6 +17,7 @@
 </template>
 
 <script>
+import firebaseApp from '../../firebase/index'
 import RideItemOverview from '../RideItemOverview'
 import CurrentRideView from '../CurrentRideView'
 export default {
@@ -32,7 +34,18 @@ export default {
 		}
 	},
 	methods: {
-		clickLink () {}
+		clickLink () {},
+		logoutUser: function () {
+			firebaseApp.auth().signOut()
+				.then( data => {
+					// console.log(`You are logged in as ${data.user.email}`);
+					this.$store.dispatch('LOGOUT_SUCCESS')
+				})
+				.catch( err => {
+					// todo: handle error -
+					console.log('logout error:', err.message)
+				})
+		}
 	},
 	created () {
 		this.$store.dispatch('GET_CALRIDES_FIREBASE')

@@ -31,6 +31,10 @@ export default () => ({
 		LOGIN_SUCCESS ({commit}, payload) {
 			commit('setUser', payload)
 			router.push('/')
+		},
+		LOGOUT_SUCCESS ({commit}, payload) {
+			commit('setUser', null)
+			router.push('/login')
 		}
 	}
 })
