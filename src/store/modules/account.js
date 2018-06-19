@@ -1,10 +1,14 @@
 import * as firebase from 'firebase'
+import Firestore from '@/firebase/firestore'
+
 import router from '@/router'
 
+const driverCollection = Firestore.collection('drivers') // todo: should the collection come from an env var
 // todo do we need to organize an api file like this: https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/api/index.js
 export default () => ({
 	state: {
-		user: null
+		user: null,
+		isDriver: false,
 	},
 	getters: {
 		user (state) {
@@ -25,7 +29,10 @@ export default () => ({
 		setUser: (state, payload) => {
 			state.user = payload
 			// VueLocalStorage.set('user', JSON.stringify(payload))
-		}
+		},
+		reportUserIsDriver: (state, payload) => {
+			state.isDriver = payload
+		},
 	},
 	actions: {
 		LOGIN_SUCCESS ({commit}, payload) {
@@ -35,6 +42,16 @@ export default () => ({
 		LOGOUT_SUCCESS ({commit}, payload) {
 			commit('setUser', null)
 			router.push('/login')
+		},
+		RetrieveDriverStatus ({commit, state}, payload) {
+			driverCollection
+				.doc(state.user.uid)
+				.get()
+				.then((doc) => {
+					if(doc.exists){
+						commit('reportUserIsDriver', true)
+					}
+				})
 		}
 	}
 })

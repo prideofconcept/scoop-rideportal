@@ -1,20 +1,12 @@
 <template>
 
-	<div class="col-12 white--text my-4">
-		<h2 class="headline">{{ride.summary}}</h2>
-		<div class="row">
-			<p>pickup: {{ride.location}}
-				<button class="btn btn-small" v-bind:href="pickupHref" target="_blank"><i>navigation</i></button>
-			</p>
-			<p>drop-off: <span v-html="ride.description"></span>
-				<button class="btn btn-small" v-bind:href="dropoffHref" target="_blank"><i>near_me</i></button>
-			</p>
-			<p>notes:</p>
-		</div>
-		<div class="white--text">
+	<div class="row white--text my-4">
+		<h4 class="headline" @click="onSelected"><i class="oi oi-chevron-right"></i>{{ride.summary}}</h4>
+
+		<div class="col-12 white--text" v-show="isSelecteder">
+			<i class="oi oi-media-play"></i>
 			<button v-on:click.prevent="onStartRide" v-if="!isCurrentRide">Start Ride</button>
 			<button v-on:click.prevent="onStopRide" v-if="isCurrentRide">Finish Ride</button>
-
 		</div>
 	</div>
 
@@ -30,18 +22,20 @@ export default {
 	},
 	data () {
 		return {
-			isCurrentRide: false
+			isCurrentRide: false,
+			isSelecteder: false,
 		}
 	},
 	computed: {
 		rides () {
 			return this.$store.state.events
-		},
-		pickupHref () { return `http://maps.google.com/?daddr=${this.ride.location}` },
-		dropoffHref () { return `http://maps.google.com/?daddr=${this.ride.description}` }
-
+		}
 	},
 	methods: {
+		onSelected: function(e) {
+			this.isSelecteder = !this.isSelecteder
+			console.log(e.currentTarget.classList.toggle('selected'))
+		},
 		onStartRide: function (e) {
 			console.log('click', this.ride.id)
 			this.$store.dispatch('startRide', this.ride)
@@ -58,12 +52,18 @@ export default {
 }
 </script>
 
-<style scoped>
-h1, h2 {
-	font-weight: bold;
-}
+<style  scoped>
+	.headline .oi {
+		top:4px;
+		color: #ddd;
+	}
+	.headline.selected .oi {
+		color: #039be5;
+	}
 
-a {
-	color: #42b983;
-}
+	a {
+		color: #42b983;
+	}
+
+
 </style>

@@ -8,7 +8,8 @@ export default () => ({
 	state: {
 		onRide: false,
 		currentRide: null,
-		fetching: false
+		fetching: false,
+		ride_statuses: ['pending','picking_up','driving','dropping_off','complete'],
 	},
 	mutations: {
 		reportSaveRideLogSuccess (state, result) {
@@ -21,6 +22,11 @@ export default () => ({
 		reportRideStop (state, result) {
 			state.currentRide = null,
 			state.onRide = false
+		},
+		setCurrentRide (state, payload) {
+			console.log('current irde found', payload )
+			state.currentRide = payload,
+			state.onRide = true
 		}
 	},
 	actions: {
@@ -52,8 +58,8 @@ export default () => ({
 				.set({
 					id: ride.id,
 					name: ride.summary,
-					driver_id: 0,
-					family_id: 0,
+					driver: {email: ride.driver},
+					guardian: {email: ride.guardian},
 				})
 		},
 		stopRide ({ commit, state }, payload) {

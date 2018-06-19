@@ -1,7 +1,7 @@
 <template>
 <div class="row">
 	<div class="col-12">
-		<h1>Dashboard</h1>
+		<h4 class="headline">Dashboard</h4>
 		<h5>{{ msg }} <span v-on:click="logoutUser" class="oi oi-account-logout"></span></h5>
 
 		<div class="row">
@@ -32,8 +32,11 @@ export default {
 		rides () {
 			return this.$store.state.events
 		},
-		currentRide () {
+		onRide () {
 			return this.$store.state.ride.onRide
+		},
+		currentRide () {
+			return this.$store.state.ride.currentRide
 		}
 	},
 	methods: {
@@ -64,21 +67,25 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-	font-weight: normal;
-}
+	h1, h2 {
+		font-weight: normal;
+	}
 
-ul {
-	list-style-type: none;
-	padding: 0;
-}
+	.headline {
+		text-transform: uppercase;
+	}
 
-li {
-	display: inline-block;
-	margin: 0 10px;
-}
+	ul {
+		list-style-type: none;
+		padding: 0;
+	}
 
-a {
-	color: #42b983;
-}
+	li {
+		display: inline-block;
+		margin: 0 10px;
+	}
+
+	a {
+		color: #42b983;
+	}
 </style>
