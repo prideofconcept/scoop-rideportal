@@ -35,8 +35,8 @@ export default new Vuex.Store({
 		GET_CALRIDES_FIREBASE ({commit, state}, payload) {
 			firebaseApp.auth().currentUser.getIdToken().then(function (authToken) {
 				console.log('Sending request to', this, 'with ID token in Authorization header.')
-				// const api_url = 'https://us-central1-yetigo-3b1de.cloudfunctions.net/httpsGetRetrieveCalendar/'
-				const apiUrl = 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetrieveCalendar/'
+				const apiUrl = 'https://us-central1-yetigo-3b1de.cloudfunctions.net/httpsGetRetrieveCalendar/'
+				//const apiUrl = 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetrieveCalendar/'
 
 				axios.get(apiUrl, {
 					method: 'GET',
@@ -59,8 +59,8 @@ export default new Vuex.Store({
 				.doc(`${ride.id} :: ${ride.summary}`)
 				.get()*/
 			firebaseApp.auth().currentUser.getIdToken().then(function (authToken) {
-				// const api_url = 'https://us-central1-yetigo-3b1de.cloudfunctions.net/httpsGetRetrieveCalendar/current'
-				const apiUrl = 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetrieveCalendar/current'
+				const apiUrl = 'https://us-central1-yetigo-3b1de.cloudfunctions.net/httpsGetRetrieveCalendar/current'
+				//const apiUrl = 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetrieveCalendar/current'
 
 				axios.get(apiUrl, {
 					headers: {'Authorization': 'Bearer ' + authToken}
