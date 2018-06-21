@@ -1,7 +1,11 @@
 <template>
 
-	<div class="row my-4">
-		<h4 class="col-12 headline" @click="onSelected"><i class="oi oi-chevron-right"></i>{{ride.summary}}</h4>
+	<div class="row my-3">
+		<div class="row ml-2 item-detail" @click="onSelected">
+			<p class="col-12 px-3 headline text-left" >{{ride.summary}}</p>
+			<p class="col-12 px-3 small text-left">{{rideStartTime}}</p>
+		</div>
+
 
 		<div class="col-12 white--text" v-show="isSelecteder">
 			<i class="oi oi-media-play"></i>
@@ -29,12 +33,14 @@ export default {
 	computed: {
 		rides () {
 			return this.$store.state.events
+		},
+		rideStartTime () {
+			return this.formatDate(new Date(this.ride.startdate))//()
 		}
 	},
 	methods: {
 		onSelected: function(e) {
 			this.isSelecteder = !this.isSelecteder
-			console.log(e.currentTarget.classList.toggle('selected'))
 		},
 		onStartRide: function (e) {
 			console.log('click', this.ride.id)
@@ -45,7 +51,21 @@ export default {
 			// throw up a warning before allowing this action
 			this.$store.dispatch('stopRide', this.ride)
 			this.isCurrentRide = false
-		}
+		},
+		formatDate: function (date) {
+			var monthNames = [
+				"January", "February", "March",
+				"April", "May", "June", "July",
+				"August", "September", "October",
+				"November", "December"
+			];
+
+			var day = date.getDate();
+			var monthIndex = date.getMonth();
+			var year = date.getFullYear();
+			return date.toLocaleString('en-US',{timeZone:'America/New_York'})
+			//return day + ' ' + monthNames[monthIndex] + ' ' + year + ' - ' + date.getHours() + ':' + date.getMinutes();
+		},
 	},
 	created () {
 	}
@@ -53,11 +73,23 @@ export default {
 </script>
 
 <style  scoped>
+	.headline {
+		font-weight: bold;
+		color: #135669;
+		font-size: 14px;
+	}
+	p {font-size: 11px;}
 	.headline .oi {
 		top:4px;
 		color: #ddd;
 	}
-	.headline.selected .oi {
+	.item-detail {
+		border-left: 2px #777 solid;
+	}
+	.selected.item-detail{
+		border-color: #e93293;
+	}
+	.selected .oi {
 		color: #039be5;
 	}
 

@@ -34,7 +34,9 @@
 				</p>
 			</div>
 			<div class="col-6">
-				<p><i class="oi oi-data-transfer-upload mr-2"></i>drop-off:<br/> <span v-html="currentRide.description"></span>
+				<p>
+					<i class="oi oi-data-transfer-upload mr-2"></i>drop-off:<br/> <span v-html="currentRide.description"></span>
+					<a class="btn btn-small btn-inverted" v-bind:href="dropoffHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to {{destination}}destination</a>
 				</p>
 			</div>
 			<p>notes:</p>
@@ -65,6 +67,7 @@ export default {
 		currentRide () {
 			return this.$store.state.ride.currentRide
 		},
+		destination() {return this.currentRide.description},
 		pickupHref () { return `http://maps.google.com/?daddr=${this.currentRide.location}` },
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.description}` },
 	},

@@ -15,8 +15,9 @@
 			<h5 class="headline">Upcoming Rides</h5>
 			<LoadingIndicator v-show="isFetching"/>
 		</div>
-		<ride-item-overview v-for="ride in rides" v-bind:key="ride.id" v-bind:ride="ride"></ride-item-overview>
 	</div>
+
+	<ride-item-overview v-for="ride in rides" v-bind:key="ride.id" v-bind:ride="ride"></ride-item-overview>
 
 </div>
 </template>
