@@ -25,8 +25,12 @@ export default () => ({
 		},
 		setCurrentRide (state, payload) {
 			console.log('current irde found', payload )
-			state.currentRide = payload,
-			state.onRide = true
+			state.currentRide = payload
+			if(state.currentRide) {
+				state.onRide = true
+			} else {
+				state.onRide = false
+			}
 		}
 	},
 	actions: {
@@ -83,7 +87,7 @@ export default () => ({
 				}) // todo: handle errors
 
 			currentRideCollection
-				.doc(`${ride.id} :: ${ride.summary}`)
+				.doc(`${ride.id}`)
 				.delete()
 		}
 	}

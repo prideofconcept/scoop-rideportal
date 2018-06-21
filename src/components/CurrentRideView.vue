@@ -73,24 +73,35 @@ export default {
 			// throw up a warning before allowing this action
 			this.$store.dispatch('stopRide', this.currentRide)
 		},
-		handleCurrentRideFound: function(querySnapshot) {
-			console.log('current: none');
-			querySnapshot.forEach(function(doc) {
+		handleCurrentRideUpdate: function(querySnapshot) {
+
+			querySnapshot.docChanges().forEach(function(change) {
+				if (change.type === "removed") {
+					this.$store.dispatch('SET_CURRRIDE', null)
+					return
+				}
+			}.bind(this))
+
+			if(querySnapshot.empty || querySnapshot.docs.length <= 0) {
+				return
+			}
+
+			querySnapshot.forEach(function (doc) {
 				const currentRide = doc.data()
 				this.$store.dispatch('SET_CURRRIDE', currentRide)
-			}.bind(this));
+			}.bind(this))
 		}
 	},
 	mounted () {
 		console.log('asking for current')
 		currentRideCollection
 			.where('guardian', '==',firebase.auth().currentUser.email )
-			.onSnapshot(this.handleCurrentRideFound.bind(this),
+			.onSnapshot(this.handleCurrentRideUpdate.bind(this),
 				(error) => { console.log("Error getting documents: ", error);})
 
 		currentRideCollection
 			.where('driver', '==', firebase.auth().currentUser.email)
-			.onSnapshot(this.handleCurrentRideFound.bind(this),
+			.onSnapshot(this.handleCurrentRideUpdate.bind(this),
 				(error) => { console.log("Error getting documents: ", error);})
 
 	}
