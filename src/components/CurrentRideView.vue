@@ -1,6 +1,6 @@
 <template>
 
-	<div id="CurrentRideView" class="col-12 white--text my-4 p-4">
+	<div id="CurrentRideView" class="col-12 white--text my-4 p-4" v-if="currentRide">
 		<h6 class="headline">Current Ride</h6>
 		<div class="row">
 			<div class="col-12">
@@ -30,7 +30,7 @@
 		<div class="row">
 			<div class="col-6">
 				<p class=""><i class="oi oi-data-transfer-download mr-2"></i>pickup:<br/> {{currentRide.location}}
-					<button class="btn btn-small" v-bind:href="pickupHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to pickup</button>
+					<a class="btn btn-small btn-inverted" v-bind:href="pickupHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to pickup</a>
 				</p>
 			</div>
 			<div class="col-6">
@@ -48,12 +48,17 @@
 </template>
 
 <script>
+	import * as firebase from 'firebase'
+
+	import Firestore from '@/firebase/firestore'
+	const currentRideCollection = Firestore.collection('ride_current') // todo: s houdl the collections be exported from the firebase module
+
 export default {
 	props: {
 	},
 	data () {
 		return {
-			step_pickup: true
+			step_pickup: true,
 		}
 	},
 	computed: {
@@ -67,9 +72,27 @@ export default {
 		onStopRide: function (e) {
 			// throw up a warning before allowing this action
 			this.$store.dispatch('stopRide', this.currentRide)
+		},
+		handleCurrentRideFound: function(querySnapshot) {
+			console.log('current: none');
+			querySnapshot.forEach(function(doc) {
+				const currentRide = doc.data()
+				this.$store.dispatch('SET_CURRRIDE', currentRide)
+			}.bind(this));
 		}
 	},
-	created () {
+	mounted () {
+		console.log('asking for current')
+		currentRideCollection
+			.where('guardian', '==',firebase.auth().currentUser.email )
+			.onSnapshot(this.handleCurrentRideFound.bind(this),
+				(error) => { console.log("Error getting documents: ", error);})
+
+		currentRideCollection
+			.where('driver', '==', firebase.auth().currentUser.email)
+			.onSnapshot(this.handleCurrentRideFound.bind(this),
+				(error) => { console.log("Error getting documents: ", error);})
+
 	}
 }
 </script>
@@ -90,5 +113,9 @@ export default {
 
 	a {
 		color: #42b983;
+	}
+
+	.steps {
+		display: none;
 	}
 </style>

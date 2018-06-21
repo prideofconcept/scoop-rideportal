@@ -54,12 +54,11 @@ export default () => ({
 					commit('reportRideStart', ride)
 				}) // todo: handle errors
 
-			currentRideCollection.doc(`${ride.id} :: ${ride.summary}`)
+			currentRideCollection.doc(`${ride.id}`)
 				.set({
-					id: ride.id,
-					name: ride.summary,
-					driver: {email: ride.driver},
-					guardian: {email: ride.guardian},
+					...ride,
+					driver: ride.driver,
+					guardian: ride.guardian,
 				})
 		},
 		stopRide ({ commit, state }, payload) {

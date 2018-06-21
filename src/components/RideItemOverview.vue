@@ -1,7 +1,7 @@
 <template>
 
-	<div class="row white--text my-4">
-		<h4 class="headline" @click="onSelected"><i class="oi oi-chevron-right"></i>{{ride.summary}}</h4>
+	<div class="col-12 white--text my-4">
+		<h4 class="col-12 headline" @click="onSelected"><i class="oi oi-chevron-right"></i>{{ride.summary}}</h4>
 
 		<div class="col-12 white--text" v-show="isSelecteder">
 			<i class="oi oi-media-play"></i>

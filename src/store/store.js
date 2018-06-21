@@ -8,8 +8,8 @@ import RidesModule from './modules/rides'
 import AccountModule from './modules/account'
 
 // todo: organize this with modules - https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/store/modules/auth.js
-
 Vue.use(Vuex)
+
 export default new Vuex.Store({
 	modules: {
 		ride: RidesModule(),
@@ -49,33 +49,12 @@ export default new Vuex.Store({
 				}).then(function(response) {
 					console.log(response.data)
 					commit('setEvents', response.data)
-					this.dispatch('GET_CURRRIDE_FIREBASE')
 				}.bind(this))
 			}.bind(this))
 		},
 
-		GET_CURRRIDE_FIREBASE ({commit, state}, payload) {
-			/*currentRideCollection
-				.doc(`${ride.id} :: ${ride.summary}`)
-				.get()*/
-			firebaseApp.auth().currentUser.getIdToken().then(function (authToken) {
-				const apiUrl = 'https://us-central1-yetigo-3b1de.cloudfunctions.net/httpsGetRetrieveCalendar/current'
-				//const apiUrl = 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetrieveCalendar/current'
-
-				axios.get(apiUrl, {
-					headers: {'Authorization': 'Bearer ' + authToken}
-				}).then(response => {
-					const currEvents = response.data.current_event
-					console.log(currEvents)
-					if(currEvents.length){
-						const eventID = currEvents[0].id
-						const currentEvent = this.events.filter((event) => event.id === eventID)
-						console.log('goo',eventID,currentEvent,this.events.length)
-						commit('setCurrentRide', currentEvent[0], {root:true})
-
-					}
-				})
-			}.bind(state))
+		SET_CURRRIDE ({commit, state}, payload) {
+			commit('setCurrentRide', payload, {root:true})
 		},
 
 		GET_CALRIDES ({commit}, payload) {

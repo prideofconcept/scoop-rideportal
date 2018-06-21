@@ -2,16 +2,14 @@
 <div class="row">
 	<div class="col-12">
 		<h4 class="headline">Dashboard</h4>
-		<h5>{{ msg }} <span v-on:click="logoutUser" class="oi oi-account-logout"></span></h5>
-
-		<div class="row">
-			<CurrentRideView v-if="currentRide"/>
-		</div>
-		<h3>Upcoming Rides</h3>
-		<div class="row">
-			<ride-item-overview v-for="ride in rides" v-bind:key="ride.id" v-bind:ride="ride"></ride-item-overview>
-		</div>
+		<h5>{{ msg }} <span v-on:click="logoutUser" class="oi oi-account-logout">&nbsp;</span></h5>
 	</div>
+
+	<CurrentRideView/>
+	<div class="col-12">
+		<h3>Upcoming Rides</h3>
+	</div>
+	<ride-item-overview v-for="ride in rides" v-bind:key="ride.id" v-bind:ride="ride"></ride-item-overview>
 
 </div>
 </template>
@@ -42,6 +40,7 @@ export default {
 	methods: {
 		clickLink () {},
 		logoutUser: function () {
+			console.log('click logout')
 			firebaseApp.auth().signOut()
 				.then( data => {
 					// console.log(`You are logged in as ${data.user.email}`);
