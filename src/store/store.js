@@ -16,23 +16,32 @@ export default new Vuex.Store({
 		account: AccountModule()
 	},
 	state: {
-		events: []
+		events: [],
+		isFetchingEvents: false
 	},
 	getters: {
 		loadedEvents (state) {
 			return state.events
-		}
+		},
+		/*isFetchingEvents (state) {
+			return state.fetching
+		}*/
 	},
 	mutations: {
 
 		setEvents (state, payload) {
-			console.log('setEvents -> ', payload)
 			Vue.set(state, 'events', payload.events)
+		},
+
+		setEventsFetching (state, payload) {
+			console.log('setFetching -> ', payload)
+			Vue.set(state, 'isFetchingEvents', payload)
 		}
 	},
 	actions: {
 
 		GET_CALRIDES_FIREBASE ({commit, state}, payload) {
+			commit('setEventsFetching', true)
 			firebaseApp.auth().currentUser.getIdToken().then(function (authToken) {
 				console.log('Sending request to', this, 'with ID token in Authorization header.')
 				const apiUrl = 'https://us-central1-yetigo-3b1de.cloudfunctions.net/httpsGetRetrieveCalendar/'
@@ -49,6 +58,8 @@ export default new Vuex.Store({
 				}).then(function(response) {
 					console.log(response.data)
 					commit('setEvents', response.data)
+					commit('setEventsFetching', false)
+
 				}.bind(this))
 			}.bind(this))
 		},

@@ -1,15 +1,22 @@
 <template>
-<div class="row">
-	<div class="col-12">
-		<h4 class="headline">Dashboard</h4>
-		<h5>{{ msg }} <span v-on:click="logoutUser" class="oi oi-account-logout">&nbsp;</span></h5>
+<div>
+
+	<div class="row">
+		<div class="col-12">
+			<h6 class="headline">Dashboard</h6>
+			<h6>{{ msg }} <span v-on:click="logoutUser" class="oi oi-account-logout">&nbsp;</span></h6>
+		</div>
 	</div>
 
 	<CurrentRideView/>
-	<div class="col-12">
-		<h3>Upcoming Rides</h3>
+
+	<div class="row">
+		<div class="col-12 pt-4">
+			<h5 class="headline">Upcoming Rides</h5>
+			<LoadingIndicator v-show="isFetching"/>
+		</div>
+		<ride-item-overview v-for="ride in rides" v-bind:key="ride.id" v-bind:ride="ride"></ride-item-overview>
 	</div>
-	<ride-item-overview v-for="ride in rides" v-bind:key="ride.id" v-bind:ride="ride"></ride-item-overview>
 
 </div>
 </template>
@@ -17,9 +24,10 @@
 <script>
 import firebaseApp from '../../firebase/index'
 import RideItemOverview from '../RideItemOverview'
+import LoadingIndicator from '../loadingIndicator'
 import CurrentRideView from '../CurrentRideView'
 export default {
-	components: {RideItemOverview, CurrentRideView},
+	components: {RideItemOverview, CurrentRideView, LoadingIndicator},
 	name: 'Dashboard',
 	data () {
 		return {
@@ -29,6 +37,9 @@ export default {
 	computed: {
 		rides () {
 			return this.$store.state.events
+		},
+		isFetching () {
+			return this.$store.state.isFetchingEvents
 		},
 		onRide () {
 			return this.$store.state.ride.onRide

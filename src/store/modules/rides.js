@@ -26,7 +26,7 @@ export default () => ({
 		setCurrentRide (state, payload) {
 			console.log('current irde found', payload )
 			state.currentRide = payload
-			if(state.currentRide) {
+			if(payload != null) {
 				state.onRide = true
 			} else {
 				state.onRide = false
