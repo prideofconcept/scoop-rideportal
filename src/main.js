@@ -39,6 +39,7 @@ new Vue({
 		firebase.auth().onAuthStateChanged((user) => {
 			if(user != null) {
 				this.$store.dispatch('LOGIN_SUCCESS', user)
+				this.$store.dispatch('GET_DB_RIDES')
 			}
 		})
 	}

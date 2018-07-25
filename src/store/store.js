@@ -2,11 +2,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import firebaseApp from '@/firebase/'
+import Firestore from '@/firebase/firestore'
 import axios from 'axios'
 
 import RidesModule from './modules/rides'
 import AccountModule from './modules/account'
 
+const ridesCollection = Firestore.collection('rides') // todo: should the collection come from an env var
 // todo: organize this with modules - https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/store/modules/auth.js
 Vue.use(Vuex)
 
@@ -62,6 +64,43 @@ export default new Vuex.Store({
 
 				}.bind(this))
 			}.bind(this))
+		},
+
+		GET_DB_RIDES ({commit, state}, payload) {
+			commit('setEventsFetching', true)
+
+			let ridesFamily = [];
+			let ridesDriver = [];
+			let rides = [];
+
+			ridesCollection
+				.where('guardian', '==', firebaseApp.auth().currentUser.email)
+				.get()
+				.then(snapshot => {
+					snapshot.forEach(doc => {
+						console.log(doc.id, '=>', doc.data());
+						rides.push(doc.data())
+						ridesFamily.push(doc.data())
+					});
+					commit('setEvents', rides)
+					commit('setEventsFetching', false)
+				})
+
+			ridesCollection
+				.where('driver', '==', firebaseApp.auth().currentUser.email)
+				.get()
+				.then(snapshot => {
+					snapshot.forEach(doc => {
+						console.log(doc.id, '=>', doc.data());
+						rides.push(doc.data())
+						ridesDriver.push(doc.data())
+					});
+					commit('setEvents', rides)
+					commit('setEventsFetching', false)
+				})
+				/*.onSnapshot(this.handleCurrentRideUpdate.bind(this),
+					(error) => { console.log("Error getting documents: ", error);})*/
+
 		},
 
 		SET_CURRRIDE ({commit, state}, payload) {

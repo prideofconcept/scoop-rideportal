@@ -65,7 +65,7 @@ export default {
 		}
 	},
 	created () {
-		this.$store.dispatch('GET_CALRIDES_FIREBASE')
+		// this.$store.dispatch('GET_CALRIDES_FIREBASE') // old method - get them from firebase function
 		// this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
 	},
 
