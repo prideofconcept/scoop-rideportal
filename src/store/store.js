@@ -25,9 +25,9 @@ export default new Vuex.Store({
 		loadedEvents (state) {
 			return state.events
 		},
-		/*isFetchingEvents (state) {
+		/* isFetchingEvents (state) {
 			return state.fetching
-		}*/
+		} */
 	},
 	mutations: {
 
@@ -47,7 +47,7 @@ export default new Vuex.Store({
 			firebaseApp.auth().currentUser.getIdToken().then(function (authToken) {
 				console.log('Sending request to', this, 'with ID token in Authorization header.')
 				const apiUrl = 'https://us-central1-yetigo-3b1de.cloudfunctions.net/httpsGetRetrieveCalendar/'
-				//const apiUrl = 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetrieveCalendar/'
+				// const apiUrl = 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetrieveCalendar/'
 
 				axios.get(apiUrl, {
 					method: 'GET',
@@ -57,7 +57,7 @@ export default new Vuex.Store({
 					headers: {
 						'Authorization': 'Bearer ' + authToken
 					}
-				}).then(function(response) {
+				}).then(function (response) {
 					console.log(response.data)
 					commit('setEvents', response.data)
 					commit('setEventsFetching', false)
@@ -69,19 +69,19 @@ export default new Vuex.Store({
 		GET_DB_RIDES ({commit, state}, payload) {
 			commit('setEventsFetching', true)
 
-			let ridesFamily = [];
-			let ridesDriver = [];
-			let rides = [];
+			let ridesFamily = []
+			let ridesDriver = []
+			let rides = []
 
 			ridesCollection
 				.where('guardian', '==', firebaseApp.auth().currentUser.email)
 				.get()
 				.then(snapshot => {
 					snapshot.forEach(doc => {
-						console.log(doc.id, '=>', doc.data());
+						console.log(doc.id, '=>', doc.data())
 						rides.push(doc.data())
 						ridesFamily.push(doc.data())
-					});
+					})
 					commit('setEvents', rides)
 					commit('setEventsFetching', false)
 				})
@@ -91,20 +91,20 @@ export default new Vuex.Store({
 				.get()
 				.then(snapshot => {
 					snapshot.forEach(doc => {
-						console.log(doc.id, '=>', doc.data());
+						console.log(doc.id, '=>', doc.data())
 						rides.push(doc.data())
 						ridesDriver.push(doc.data())
-					});
+					})
 					commit('setEvents', rides)
 					commit('setEventsFetching', false)
 				})
-				/*.onSnapshot(this.handleCurrentRideUpdate.bind(this),
-					(error) => { console.log("Error getting documents: ", error);})*/
+				/* .onSnapshot(this.handleCurrentRideUpdate.bind(this),
+					(error) => { console.log("Error getting documents: ", error);}) */
 
 		},
 
 		SET_CURRRIDE ({commit, state}, payload) {
-			commit('setCurrentRide', payload, {root:true})
+			commit('setCurrentRide', payload, {root: true})
 		},
 
 		GET_CALRIDES ({commit}, payload) {

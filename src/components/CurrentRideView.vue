@@ -50,10 +50,10 @@
 </template>
 
 <script>
-	import * as firebase from 'firebase'
+import * as firebase from 'firebase'
+import Firestore from '@/firebase/firestore'
 
-	import Firestore from '@/firebase/firestore'
-	const currentRideCollection = Firestore.collection('ride_current') // todo: s houdl the collections be exported from the firebase module
+const currentRideCollection = Firestore.collection('ride_current') // todo: s houdl the collections be exported from the firebase module
 
 export default {
 	props: {
@@ -67,7 +67,7 @@ export default {
 		currentRide () {
 			return this.$store.state.ride.currentRide
 		},
-		destination() {return this.currentRide.description},
+		destination () { return this.currentRide.description },
 		pickupHref () { return `http://maps.google.com/?daddr=${this.currentRide.location}` },
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.description}` },
 	},
@@ -76,12 +76,11 @@ export default {
 			// throw up a warning before allowing this action
 			this.$store.dispatch('stopRide', this.currentRide)
 		},
-		handleCurrentRideUpdate: function(querySnapshot) {
+		handleCurrentRideUpdate: function (querySnapshot) {
 
-			querySnapshot.docChanges().forEach(function(change) {
-				if (change.type === "removed") {
+			querySnapshot.docChanges().forEach(function (change) {
+				if (change.type === 'removed') {
 					this.$store.dispatch('SET_CURRRIDE', null)
-					return
 				}
 			}.bind(this))
 
@@ -96,16 +95,18 @@ export default {
 		}
 	},
 	mounted () {
-		console.log('asking for current')
+		console.log('asking for current ride')
 		currentRideCollection
-			.where('guardian', '==',firebase.auth().currentUser.email )
+			.where('guardian', '==', firebase.auth().currentUser.email )
 			.onSnapshot(this.handleCurrentRideUpdate.bind(this),
-				(error) => { console.log("Error getting documents: ", error);})
+				(error) => { console.log('Error getting documents: ', error)
+				})
 
 		currentRideCollection
 			.where('driver', '==', firebase.auth().currentUser.email)
 			.onSnapshot(this.handleCurrentRideUpdate.bind(this),
-				(error) => { console.log("Error getting documents: ", error);})
+				(error) => { console.log('Error getting documents: ', error)
+				})
 
 	}
 }
