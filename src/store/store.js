@@ -75,39 +75,57 @@ export default new Vuex.Store({
 
 			console.log('grabbing db rides')
 
-			const prms1 = ridesCollection
+			const gurdnPrms = ridesCollection
 				.where('guardian.email', '==', firebaseApp.auth().currentUser.email)
 				.get()
 				.then(snapshot => {
 					snapshot.forEach(doc => {
 						console.log(doc.id, '=>', doc.data())
-						rides.push(doc.data())
-						ridesFamily.push(doc.data())
+						if (isRideWithinWeek(doc.data())){
+							rides.push(doc.data())
+							ridesFamily.push(doc.data())
+						}
 					})
 					return true
-				})
+				})// todo: create catch and respond accordingly in promise.all
 
-			const prms2 = ridesCollection
+			const drvrPrms = ridesCollection
 				.where('driver.email', '==', firebaseApp.auth().currentUser.email)
 				.get()
 				.then(snapshot => {
 					snapshot.forEach(doc => {
 						console.log(doc.id, '=>', doc.data())
-						rides.push(doc.data())
-						ridesDriver.push(doc.data())
+						if (isRideWithinWeek(doc.data())) {
+							rides.push(doc.data())
+							ridesDriver.push(doc.data())
+						}
 					})
 					return true
-				})
+				})// todo: create catch and respond accordingly in promise.all
 				/* .onSnapshot(this.handleCurrentRideUpdate.bind(this),
 					(error) => { console.log("Error getting documents: ", error);}) */
 
-			Promise.all([prms1, prms2])
+			Promise.all([gurdnPrms, drvrPrms])
 				.then( results => {
 					console.log('done loading events',rides)
 					commit('setEvents', rides)
 					commit('setEventsFetching', false)
 
 				})
+
+			const isRideWithinWeek = ride => {
+				// todo : only show rides that are 7 days in the future
+				const now = new Date();
+				let lastWeek = new Date();
+				lastWeek.setDate(now.getDate() - 7)
+				console.log('comparing dates', ride.summary, lastWeek, ride.startdate,Date.parse(ride.startdate) > lastWeek)
+
+				if (Date.parse(ride.startdate) > lastWeek) {
+					return true
+				}
+
+				return false
+			}
 
 		},
 
