@@ -9,7 +9,7 @@ export default () => ({
 		onRide: false,
 		currentRide: null,
 		fetching: false,
-		ride_statuses: ['pending','picking_up','driving','dropping_off','complete'],
+		ride_statuses: ['pending', 'picking_up', 'driving', 'dropping_off', 'complete'],
 	},
 	mutations: {
 		reportSaveRideLogSuccess (state, result) {
@@ -20,7 +20,7 @@ export default () => ({
 			state.onRide = true
 		},
 		reportRideStop (state, result) {
-			state.currentRide = null,
+			state.currentRide = null
 			state.onRide = false
 		},
 		setCurrentRide (state, payload) {

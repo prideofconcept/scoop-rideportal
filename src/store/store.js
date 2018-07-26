@@ -74,7 +74,7 @@ export default new Vuex.Store({
 			let rides = []
 
 			ridesCollection
-				.where('guardian', '==', firebaseApp.auth().currentUser.email)
+				.where('guardian.email', '==', firebaseApp.auth().currentUser.email)
 				.get()
 				.then(snapshot => {
 					snapshot.forEach(doc => {
@@ -87,7 +87,7 @@ export default new Vuex.Store({
 				})
 
 			ridesCollection
-				.where('driver', '==', firebaseApp.auth().currentUser.email)
+				.where('driver.email', '==', firebaseApp.auth().currentUser.email)
 				.get()
 				.then(snapshot => {
 					snapshot.forEach(doc => {

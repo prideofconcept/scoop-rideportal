@@ -6,7 +6,6 @@
 			<p class="col-12 px-3 small text-left">{{rideStartTime}}</p>
 		</div>
 
-
 		<div class="col-12 white--text" v-show="isSelecteder">
 			<i class="oi oi-media-play"></i>
 			<button v-on:click.prevent="onStartRide" v-if="!isCurrentRide">Start Ride</button>
@@ -35,11 +34,11 @@ export default {
 			return this.$store.state.events
 		},
 		rideStartTime () {
-			return this.formatDate(new Date(this.ride.startdate))//()
+			return this.formatDate(new Date(this.ride.startdate))
 		}
 	},
 	methods: {
-		onSelected: function(e) {
+		onSelected: function (e) {
 			this.isSelecteder = !this.isSelecteder
 		},
 		onStartRide: function (e) {
@@ -54,17 +53,17 @@ export default {
 		},
 		formatDate: function (date) {
 			var monthNames = [
-				"January", "February", "March",
-				"April", "May", "June", "July",
-				"August", "September", "October",
-				"November", "December"
-			];
+				'January', 'February', 'March',
+				'April', 'May', 'June', 'July',
+				'August', 'September', 'October',
+				'November', 'December'
+			]
 
-			var day = date.getDate();
-			var monthIndex = date.getMonth();
-			var year = date.getFullYear();
-			return date.toLocaleString('en-US',{timeZone:'America/New_York'})
-			//return day + ' ' + monthNames[monthIndex] + ' ' + year + ' - ' + date.getHours() + ':' + date.getMinutes();
+			var day = date.getDate()
+			var monthIndex = date.getMonth()
+			var year = date.getFullYear()
+			return date.toLocaleString('en-US', { timeZone: 'America/New_York' })
+			// return day + ' ' + monthNames[monthIndex] + ' ' + year + ' - ' + date.getHours() + ':' + date.getMinutes();
 		},
 	},
 	created () {
@@ -96,6 +95,5 @@ export default {
 	a {
 		color: #42b983;
 	}
-
 
 </style>
