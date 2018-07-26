@@ -32,7 +32,7 @@ export default new Vuex.Store({
 	mutations: {
 
 		setEvents (state, payload) {
-			Vue.set(state, 'events', payload.events)
+			Vue.set(state, 'events', payload)
 		},
 
 		setEventsFetching (state, payload) {
@@ -59,7 +59,7 @@ export default new Vuex.Store({
 					}
 				}).then(function (response) {
 					console.log(response.data)
-					commit('setEvents', response.data)
+					commit('setEvents', response.data.events)
 					commit('setEventsFetching', false)
 
 				}.bind(this))
@@ -73,7 +73,9 @@ export default new Vuex.Store({
 			let ridesDriver = []
 			let rides = []
 
-			ridesCollection
+			console.log('grabbing db rides')
+
+			const prms1 = ridesCollection
 				.where('guardian.email', '==', firebaseApp.auth().currentUser.email)
 				.get()
 				.then(snapshot => {
@@ -82,11 +84,10 @@ export default new Vuex.Store({
 						rides.push(doc.data())
 						ridesFamily.push(doc.data())
 					})
-					commit('setEvents', rides)
-					commit('setEventsFetching', false)
+					return true
 				})
 
-			ridesCollection
+			const prms2 = ridesCollection
 				.where('driver.email', '==', firebaseApp.auth().currentUser.email)
 				.get()
 				.then(snapshot => {
@@ -95,11 +96,18 @@ export default new Vuex.Store({
 						rides.push(doc.data())
 						ridesDriver.push(doc.data())
 					})
-					commit('setEvents', rides)
-					commit('setEventsFetching', false)
+					return true
 				})
 				/* .onSnapshot(this.handleCurrentRideUpdate.bind(this),
 					(error) => { console.log("Error getting documents: ", error);}) */
+
+			Promise.all([prms1, prms2])
+				.then( results => {
+					console.log('done loading events',rides)
+					commit('setEvents', rides)
+					commit('setEventsFetching', false)
+
+				})
 
 		},
 
