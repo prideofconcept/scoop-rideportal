@@ -1,6 +1,6 @@
 <template>
 
-	<div class="row my-3">
+	<div class="row my-3" v-bind:class="{ selected : isSelecteder}">
 		<div class="row ml-2 item-detail" @click="onSelected">
 			<p class="col-12 px-3 headline text-left" >{{ride.summary}}</p>
 			<p class="col-12 px-3 small text-left">{{rideStartTime}}</p>

@@ -24,16 +24,30 @@ export default () => ({
 			state.onRide = false
 		},
 		setCurrentRide (state, payload) {
-			console.log('current irde found', payload )
 			state.currentRide = payload
 			if(payload != null) {
 				state.onRide = true
 			} else {
 				state.onRide = false
 			}
-		}
+		},
+		/*setCurrentRideLocal (state, payload) {
+			console.log('updating location', payload )
+			state.currentRideLocale = payload
+			if(payload != null) {
+				state.onRide = true
+			} else {
+				state.onRide = false
+			}
+		}*/
 	},
 	actions: {
+		SET_CURRRIDE_LOCATION({commit, state}, payload) {
+			currentRideCollection.doc(state.currentRide.id)
+				.set({
+					current_locale: payload
+				},{merge: true})
+		},
 		startRide ({ commit, state }, payload) {
 			const ride = payload
 			console.log('starting ride', ride)

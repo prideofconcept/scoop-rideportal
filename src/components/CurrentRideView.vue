@@ -29,15 +29,18 @@
 
 		<div class="row">
 			<div class="col-6">
-				<p class=""><i class="oi oi-data-transfer-download mr-2"></i>pickup:<br/> {{currentRide.location}}
-					<a class="btn btn-small btn-inverted" v-bind:href="pickupHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to pickup</a>
-				</p>
+				<div class="nav-display">
+					<p class="nav-desc"><span><i class="oi oi-data-transfer-download mr-2"></i>pickup:</span><br/> {{currentRide.location}}</p>
+					<a class="btn btn-small btn-secondary" v-bind:href="pickupHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to pickup</a>
+					<a class="btn btn-small btn-secondary-white" v-bind:href="pickupWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
+				</div>
 			</div>
 			<div class="col-6">
-				<p>
-					<i class="oi oi-data-transfer-upload mr-2"></i>drop-off:<br/> <span v-html="currentRide.description"></span>
-					<a class="btn btn-small btn-inverted" v-bind:href="dropoffHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to {{destination}}destination</a>
-				</p>
+				<div class="nav-display">
+					<p class="nav-desc"><span><i class="oi oi-data-transfer-upload mr-2"></i>drop-off:</span><br/> {{currentRide.description}}</p>
+					<a class="btn btn-small btn-secondary" v-bind:href="dropoffHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to dest</a>
+					<a class="btn btn-small btn-secondary-white" v-bind:href="dropoffWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
+				</div>
 			</div>
 			<p>notes:</p>
 		</div>
@@ -70,6 +73,8 @@ export default {
 		destination () { return this.currentRide.description },
 		pickupHref () { return `http://maps.google.com/?daddr=${this.currentRide.location}` },
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.description}` },
+		pickupWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.location)}` },
+		dropoffWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.description)}` },
 	},
 	methods: {
 		onStopRide: function (e) {
@@ -92,18 +97,34 @@ export default {
 				const currentRide = doc.data()
 				this.$store.dispatch('SET_CURRRIDE', currentRide)
 			}.bind(this))
+
+			if(navigator.geolocation)
+				navigator.geolocation.getCurrentPosition(this.onPositionUpdate.bind(this))
+			else
+				alert('navigator.geolocation is not available')
+		},
+		onPositionUpdate: function (position) {
+
+			if(position.coords){
+				var lat = position.coords.latitude;
+				var lng = position.coords.longitude;
+				if (this.$store) {
+					console.log('this.$store', this.$store)
+					this.$store.dispatch('SET_CURRRIDE_LOCATION', { lat, lng })
+				}
+			}
 		}
 	},
 	mounted () {
 		console.log('asking for current ride')
 		currentRideCollection
-			.where('guardian', '==', firebase.auth().currentUser.email )
+			.where('guardian.email', '==', firebase.auth().currentUser.email )
 			.onSnapshot(this.handleCurrentRideUpdate.bind(this),
 				(error) => { console.log('Error getting documents: ', error)
 				})
 
 		currentRideCollection
-			.where('driver', '==', firebase.auth().currentUser.email)
+			.where('driver.email', '==', firebase.auth().currentUser.email)
 			.onSnapshot(this.handleCurrentRideUpdate.bind(this),
 				(error) => { console.log('Error getting documents: ', error)
 				})
@@ -125,11 +146,26 @@ export default {
 		top: 4px;
 		opacity: .6;
 	}
-
-	a {
-		color: #42b983;
+	.nav-display a{
+		margin: 8px 0;
 	}
-
+	.nav-desc {
+		min-height: 100px;
+	}
+	.nav-desc span{
+		font-size: 12px;
+		font-weight: bold;
+	}
+	.btn{
+		color: #42b983;
+		font-size: 14px;
+	}
+	.btn-secondary {
+		background-color: #ECEFF1;
+	}
+	.btn-secondary-white {
+		background-color: #fff;
+	}
 	.steps {
 		display: none;
 	}
