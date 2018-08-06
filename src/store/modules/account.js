@@ -36,8 +36,9 @@ export default () => ({
 		},
 	},
 	actions: {
-		LOGIN_SUCCESS ({commit}, payload) {
+		LOGIN_SUCCESS ({commit, dispatch}, payload) {
 			commit('setUser', payload)
+			dispatch('RetrieveDriverStatus')
 			router.push('/')
 		},
 		LOGOUT_SUCCESS ({commit}, payload) {
@@ -46,7 +47,7 @@ export default () => ({
 		},
 		RetrieveDriverStatus ({commit, state}, payload) {
 			driverCollection
-				.doc(state.user.uid)
+				.doc(state.user.email)
 				.get()
 				.then((doc) => {
 					if(doc.exists) {

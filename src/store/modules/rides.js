@@ -31,7 +31,7 @@ export default () => ({
 				state.onRide = false
 			}
 		},
-		/*setCurrentRideLocal (state, payload) {
+		/* setCurrentRideLocal (state, payload) {
 			console.log('updating location', payload )
 			state.currentRideLocale = payload
 			if(payload != null) {
@@ -42,7 +42,7 @@ export default () => ({
 		}*/
 	},
 	actions: {
-		SET_CURRRIDE_LOCATION({commit, state}, payload) {
+		SET_CURRRIDE_LOCATION ({commit, state}, payload) {
 			currentRideCollection.doc(state.currentRide.id)
 				.set({
 					current_locale: payload

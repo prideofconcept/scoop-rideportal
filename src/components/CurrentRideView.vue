@@ -27,7 +27,7 @@
 			</div>
 		</section>
 
-		<div class="row">
+		<div id="rideControlPanel" class="row" v-show="(isDriver)">
 			<div class="col-6">
 				<div class="nav-display">
 					<p class="nav-desc"><span><i class="oi oi-data-transfer-download mr-2"></i>pickup:</span><br/> {{currentRide.location}}</p>
@@ -43,11 +43,12 @@
 				</div>
 			</div>
 			<p>notes:</p>
+			<div class="white--text">
+				<button v-on:click.prevent="onStopRide" class="btn btn-light">Finish Ride</button>
+			</div>
 		</div>
 
-		<div class="white--text">
-			<button v-on:click.prevent="onStopRide" class="btn btn-light">Finish Ride</button>
-		</div>
+
 	</div>
 
 </template>
@@ -67,9 +68,8 @@ export default {
 		}
 	},
 	computed: {
-		currentRide () {
-			return this.$store.state.ride.currentRide
-		},
+		currentRide () { return this.$store.state.ride.currentRide },
+		isDriver () { return this.$store.state.account.isDriver },
 		destination () { return this.currentRide.description },
 		pickupHref () { return `http://maps.google.com/?daddr=${this.currentRide.location}` },
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.description}` },

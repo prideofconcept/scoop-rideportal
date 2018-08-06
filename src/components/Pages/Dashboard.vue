@@ -17,7 +17,11 @@
 		</div>
 	</div>
 
-	<ride-item-overview v-for="ride in rides" v-bind:key="ride.id" v-bind:ride="ride"></ride-item-overview>
+	<ride-item-overview
+		v-for="ride in rides"
+		v-bind:isSelected="[ride === currentRide]"
+		v-bind:key="ride.id"
+		v-bind:ride="ride"></ride-item-overview>
 
 </div>
 </template>

@@ -6,7 +6,7 @@
 			<p class="col-12 px-3 small text-left">{{rideStartTime}}</p>
 		</div>
 
-		<div class="col-12 white--text" v-show="isSelecteder">
+		<div class="col-12 white--text" v-show="(isSelecteder && isDriver)">
 			<i class="oi oi-media-play"></i>
 			<button v-on:click.prevent="onStartRide" v-if="!isCurrentRide">Start Ride</button>
 			<button v-on:click.prevent="onStopRide" v-if="isCurrentRide">Finish Ride</button>
@@ -30,6 +30,9 @@ export default {
 		}
 	},
 	computed: {
+		isDriver () {
+			return this.$store.state.account.isDriver
+		},
 		rides () {
 			return this.$store.state.events
 		},
