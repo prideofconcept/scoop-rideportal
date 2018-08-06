@@ -6,6 +6,9 @@ import Vuex from 'vuex'
 import App from './App'
 import router from './router'
 import store from './store/store'
+
+import * as VueGoogleMaps from "vue2-google-maps";
+
 import VueGAPI from 'vue-gapi'
 import VueLocalStorage from 'vue-localstorage'
 import * as firebase from 'firebase'
@@ -26,7 +29,12 @@ const gapiConfig = {
 Vue.use(VueGAPI, gapiConfig)
 Vue.use(VueLocalStorage)
 Vue.use(Vuex)
-
+Vue.use(VueGoogleMaps, {
+	load: {
+		key: "AIzaSyCIyQ7nNZDSIQgMUFJ9dT1FEpsLVmpLYLw",
+		libraries: "places" // necessary for places input
+	}
+});
 /* eslint-disable no-new */
 firebase.auth().onAuthStateChanged((user) => {
 	new Vue({

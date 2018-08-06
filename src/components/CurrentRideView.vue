@@ -6,6 +6,7 @@
 			<div class="col-12">
 				<h6 class="text-center">{{currentRide.summary}}</h6>
 				<p>status: </p>
+				<google-map/>
 			</div>
 		</div>
 
@@ -56,10 +57,14 @@
 <script>
 import * as firebase from 'firebase'
 import Firestore from '@/firebase/firestore'
+import GoogleMap from "@/components/GoogleMaps";
 
 const currentRideCollection = Firestore.collection('ride_current') // todo: s houdl the collections be exported from the firebase module
 
 export default {
+	components: {
+		GoogleMap
+	},
 	props: {
 	},
 	data () {
