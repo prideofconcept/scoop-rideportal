@@ -16,8 +16,6 @@ export default () => ({
 			return state.user || firebase.auth().currentUser
 		},
 		isAuthenticated (state) {
-			console.log('firebaseApp.auth().currentUser', firebase.auth().currentUser)
-
 			// do we need to add in : https://stackoverflow.com/questions/37873608/how-do-i-detect-if-a-user-is-already-logged-in-firebase
 			// or - https://github.com/CityOfPhiladelphia/taskflow-ui/blob/master/src/store/modules/auth.js - see getStoredAuth
 			var user = state.user

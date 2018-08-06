@@ -26,21 +26,23 @@ const gapiConfig = {
 Vue.use(VueGAPI, gapiConfig)
 Vue.use(VueLocalStorage)
 Vue.use(Vuex)
+
 /* eslint-disable no-new */
-new Vue({
-	el: '#app',
-	router,
-	store,
-	components: { App },
-	template: `<App/>`,
-	created () {
-		// todo: add in created functions from  https://github.com/academind/yt-devmeetup-vue-firebase/blob/14-save-firebase-check-auth/src/main.js
-		// this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
-		firebase.auth().onAuthStateChanged((user) => {
-			if(user != null) {
-				this.$store.dispatch('LOGIN_SUCCESS', user)
-				this.$store.dispatch('GET_DB_RIDES')
-			}
-		})
-	}
+firebase.auth().onAuthStateChanged((user) => {
+	new Vue({
+		el: '#app',
+		router,
+		store,
+		components: { App },
+		template: `<App/>`,
+		created () {
+			// todo: add in created functions from  https://github.com/academind/yt-devmeetup-vue-firebase/blob/14-save-firebase-check-auth/src/main.js
+			// this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
+				if(user != null) {
+					this.$store.dispatch('LOGIN_SUCCESS', user)
+					this.$store.dispatch('GET_DB_RIDES')
+				}
+		}
+	})
 })
+
