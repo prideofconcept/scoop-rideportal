@@ -1,15 +1,7 @@
 <template>
   <div>
     <div>
-      <h2>Search and add a pin</h2>
-      <label>
-        <gmap-autocomplete
-	        @place_changed="setPlace">
-        </gmap-autocomplete>
-        <button @click="addMarker">Add</button>
-      </label>
-      <br/>
-
+      <h4>Ride Current Location</h4>
     </div>
     <br>
     <gmap-map
@@ -34,7 +26,7 @@ export default {
 		return {
 			// default to Montreal to keep it simple
 			// change this to whatever makes sense
-			center: { lat: 45.508, lng: -73.587 },
+			center: { lat: 33.7490, lng: 84.3880 },
 			markers: [],
 			places: [],
 			currentPlace: null
