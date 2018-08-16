@@ -32,7 +32,7 @@ Vue.use(Vuex)
 Vue.use(VueGoogleMaps, {
 	load: {
 		key: "AIzaSyCIyQ7nNZDSIQgMUFJ9dT1FEpsLVmpLYLw",
-		libraries: "places" // necessary for places input
+		libraries: "places, geocoder" // necessary for places input
 	}
 });
 /* eslint-disable no-new */

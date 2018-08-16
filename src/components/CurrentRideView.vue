@@ -43,9 +43,11 @@
 					<a class="btn btn-small btn-secondary-white" v-bind:href="dropoffWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
 				</div>
 			</div>
-			<p>notes:</p>
-			<div class="white--text">
-				<button v-on:click.prevent="onStopRide" class="btn btn-light">Finish Ride</button>
+			<div class="col-12">
+				<p>notes:</p>
+				<div class="white--text">
+					<button v-on:click.prevent="onStopRide" class="btn btn-light">Finish Ride</button>
+				</div>
 			</div>
 		</div>
 
@@ -75,11 +77,11 @@ export default {
 	computed: {
 		currentRide () { return this.$store.state.ride.currentRide },
 		isDriver () { return this.$store.state.account.isDriver },
-		destination () { return this.currentRide.description },
+		destination () { return this.currentRide.destination },
 		pickupHref () { return `http://maps.google.com/?daddr=${this.currentRide.location}` },
-		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.description}` },
+		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.destination}` },
 		pickupWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.location)}` },
-		dropoffWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.description)}` },
+		dropoffWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.destination)}` },
 	},
 	methods: {
 		onStopRide: function (e) {

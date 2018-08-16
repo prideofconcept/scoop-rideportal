@@ -20,21 +20,34 @@
 </template>
 
 <script>
+	import {gmapApi} from 'vue2-google-maps'
 export default {
 	name: "GoogleMap",
 	data() {
 		return {
 			// default to Montreal to keep it simple
 			// change this to whatever makes sense
-			center: { lat: 33.7490, lng: 84.3880 },
-			markers: [],
+			geocoder: null,
+			center: { lat: 29.9511, lng: 90.07 },
 			places: [],
 			currentPlace: null
 		};
 	},
+	computed: {
+		google: gmapApi,
 
+		currentRide () { return this.$store.state.ride.currentRide },
+		pickup () { return this.currentRide.location },
+		destination () { return this.currentRide.destination },
+		markers () {return [
+			{position:this.getLatLng(this.pickup), latlng: { lat: 33.753746, lng: -84.386330}},
+			{position:getLatLng(this.destination), latlang: { lat: 33.8463, lng: -84.362}},
+		]}
+	},
 	mounted() {
 		this.geolocate();
+		console.log('markers', this.pickup, this.destination)
+		geocoder: new this.google.maps.Geocoder();
 	},
 
 	methods: {
@@ -42,7 +55,7 @@ export default {
 		setPlace(place) {
 			this.currentPlace = place;
 		},
-		addMarker() {
+		/*addMarker() {
 			if (this.currentPlace) {
 				const marker = {
 					lat: this.currentPlace.geometry.location.lat(),
@@ -53,7 +66,7 @@ export default {
 				this.center = marker;
 				this.currentPlace = null;
 			}
-		},
+		},*/
 		geolocate: function() {
 			navigator.geolocation.getCurrentPosition(position => {
 				this.center = {
@@ -61,6 +74,24 @@ export default {
 					lng: position.coords.longitude
 				};
 			});
+		},
+		getLatLng: function(address) {
+
+			if(address === null || address == undefined)
+				return null
+
+			this.geocoder.geocode( { 'address': address}, function(results, status) {
+				if (status == this.google.maps.GeocoderStatus.OK) {
+					/*map.setCenter(results[0].geometry.location);
+					var marker = new google.maps.Marker({
+						map: map,
+						position: results[0].geometry.location
+					});*/
+					return results[0].geometry.location
+				} else {
+					console.error('Geocode was not successful for the following reason: ' + status);
+				}
+			})
 		}
 	}
 };
