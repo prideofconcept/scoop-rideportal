@@ -140,14 +140,15 @@ export default {
 			}
 
 			querySnapshot.forEach(function (doc) {
-				const currentRide = doc.data()
-				this.$store.dispatch('SET_CURRRIDE', currentRide)
+				this.$store.dispatch('SET_CURRRIDE', doc.data())
 			}.bind(this))
 
-			if(navigator.geolocation)
-				navigator.geolocation.getCurrentPosition(this.onPositionUpdate.bind(this))
-			else
-				alert('navigator.geolocation is not available')
+			if(this.isDriver ){
+				if(navigator.geolocation)
+					navigator.geolocation.getCurrentPosition(this.onPositionUpdate.bind(this))
+				else
+					alert('navigator.geolocation is not available')
+			}
 		},
 		onPositionUpdate: function (position) {
 
@@ -163,15 +164,11 @@ export default {
 	},
 	mounted () {
 		this.currentStep = stepsOfService[this.currentStepIndx]
-		console.log('asking for current ride',this.isDriver2)
-		currentRideCollection
-			.where('guardian.email', '==', firebase.auth().currentUser.email )
-			.onSnapshot(this.handleCurrentRideUpdate.bind(this),
-				(error) => { console.log('Error getting documents: ', error)
-				})
+		const queryContraint = this.isDriver? 'driver.email' : 'guardian.email';
+		console.log('asking for current ride',this.isDriver,queryContraint)
 
 		currentRideCollection
-			.where('driver.email', '==', firebase.auth().currentUser.email)
+			.where(queryContraint, '==', firebase.auth().currentUser.email )
 			.onSnapshot(this.handleCurrentRideUpdate.bind(this),
 				(error) => { console.log('Error getting documents: ', error)
 				})

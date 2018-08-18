@@ -9,7 +9,7 @@ const driverCollection = Firestore.collection('drivers') // todo: should the col
 export default () => ({
 	state: {
 		user: null,
-		isDriver: false,
+		isDriver: null,
 	},
 	getters: {
 		user (state) {

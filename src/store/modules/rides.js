@@ -79,6 +79,9 @@ export default () => ({
 					guardian: ride.guardian,
 				})
 		},
+		setStep({ commit, state }, payload) {
+
+		},
 		stopRide ({ commit, state }, payload) {
 			const ride = payload
 			console.log('stopping ride', ride.id)
