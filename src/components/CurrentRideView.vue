@@ -152,7 +152,11 @@ export default {
 
 			if(this.isDriver ) {
 				if(navigator.geolocation) {
-					navigator.geolocation.getCurrentPosition(this.onPositionUpdate.bind(this))
+					try{
+						navigator.geolocation.getCurrentPosition(this.onPositionUpdate.bind(this))
+					} catch(e) {
+						console.log('navigator error',e)
+					}
 				}
 				else {
 					alert('navigator.geolocation is not available')
