@@ -116,7 +116,7 @@ export default {
 			const r = confirm("Deactivate Ride?! - this is not the normal process to end a ride");
 			 if(!r) return
 
-			this.$store.dispatch('stopRide', this.currentRide)
+			this.$store.dispatch('STOP_CURRENT_RIDE')
 		},
 		onNextStep: function (e) {
 			if(this.currentStep) {

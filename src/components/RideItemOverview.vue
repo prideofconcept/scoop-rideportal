@@ -9,7 +9,6 @@
 		<div class="col-12 white--text" v-show="(isSelecteder && isDriver && !currentRide)">
 			<i class="oi oi-media-play"></i>
 			<button v-on:click.prevent="onStartRide" v-if="!isCurrentRide">Select Ride</button>
-			<button v-on:click.prevent="onStopRide" v-if="isCurrentRide">Finish Ride</button>
 		</div>
 		<div class="col-12 white--text" v-show="(isSelecteder && isDriver && currentRide)">
 			<p class="error">please end or deactivate current ride, before changing ride</p>
@@ -56,11 +55,6 @@ export default {
 			console.log('click', this.ride.id)
 			this.$store.dispatch('startRide', this.ride)
 			this.isCurrentRide = true
-		},
-		onDeactivateRide: function (e) {
-			// throw up a warning before allowing this action
-			this.$store.dispatch('stopRide', this.ride)
-			this.isCurrentRide = false
 		},
 		formatDate: function (date) {
 			var monthNames = [

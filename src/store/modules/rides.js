@@ -93,8 +93,8 @@ export default () => ({
 					console.log('step saved in currentRide')
 				})
 		},
-		stopRide ({ commit, state }, payload) {
-			const ride = payload // todo: use the current ride from the state
+		STOP_CURRENT_RIDE ({ commit, state }) {
+			const ride = state.currentRide
 			console.log('stopping ride', ride.id)
 
 			// todo: move to util module
