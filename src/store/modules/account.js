@@ -10,6 +10,7 @@ export default () => ({
 	state: {
 		user: null,
 		isDriver: null,
+		isMetaDataLoaded: false
 	},
 	getters: {
 		user (state) {
@@ -31,6 +32,7 @@ export default () => ({
 		},
 		reportUserIsDriver: (state, payload) => {
 			state.isDriver = payload
+			state.isMetaDataLoaded = true;
 		},
 	},
 	actions: {

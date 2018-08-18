@@ -8,7 +8,7 @@
 		</div>
 	</div>
 
-	<CurrentRideView/>
+	<CurrentRideView v-if="(isMetaDataLoaded)"/>
 
 	<div class="row">
 		<div class="col-12 pt-4">
@@ -27,10 +27,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import firebaseApp from '../firebase/index'
 import RideItemOverview from '../components/RideItemOverview'
 import LoadingIndicator from '../components/loadingIndicator'
 import CurrentRideView from '../components/CurrentRideView'
+
 export default {
 	components: {RideItemOverview, CurrentRideView, LoadingIndicator},
 	name: 'Dashboard',
@@ -49,9 +51,11 @@ export default {
 		onRide () {
 			return this.$store.state.ride.onRide
 		},
-		currentRide () {
-			return this.$store.state.ride.currentRide
-		}
+		...mapState({
+			currentRide: state => state.ride.currentRide,
+			isDriver: state => state.account.isDriver,
+			isMetaDataLoaded: state => state.account.isMetaDataLoaded
+		})
 	},
 	methods: {
 		clickLink () {},
@@ -74,7 +78,7 @@ export default {
 	},
 
 	updated () {
-		console.log('Dashboard updated: currentRide', this.currentRide)
+		console.log('Dashboard updated: currentRide', this.currentRide, this.isMetaDataLoaded)
 
 	}
 }

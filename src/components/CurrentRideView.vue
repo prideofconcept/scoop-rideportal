@@ -173,7 +173,7 @@ export default {
 	},
 	mounted () {
 		//this.currentStep = this.currentRide.currentStep ? this.currentRide.currentStep : stepsOfService[0]
-		const queryContraint = true? 'driver.email' : 'guardian.email';
+		const queryContraint = this.isDriver? 'driver.email' : 'guardian.email';
 		console.log('asking for current ride',this.isDriver,queryContraint)
 
 		//todo: make sure we only calculate this, once app has loaded, and in a more global place
