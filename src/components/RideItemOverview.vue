@@ -6,16 +6,21 @@
 			<p class="col-12 px-3 small text-left">{{rideStartTime}}</p>
 		</div>
 
-		<div class="col-12 white--text" v-show="(isSelecteder && isDriver)">
+		<div class="col-12 white--text" v-show="(isSelecteder && isDriver && !currentRide)">
 			<i class="oi oi-media-play"></i>
 			<button v-on:click.prevent="onStartRide" v-if="!isCurrentRide">Select Ride</button>
 			<button v-on:click.prevent="onStopRide" v-if="isCurrentRide">Finish Ride</button>
+		</div>
+		<div class="col-12 white--text" v-show="(isSelecteder && isDriver && currentRide)">
+			<p class="error">please end or deactivate current ride, before changing ride</p>
 		</div>
 	</div>
 
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
 	props: {
 		ride: {
@@ -38,7 +43,10 @@ export default {
 		},
 		rideStartTime () {
 			return this.formatDate(new Date(this.ride.startdate))
-		}
+		},
+		...mapState({
+				currentRide: state => state.ride.currentRide,
+		})
 	},
 	methods: {
 		onSelected: function (e) {
@@ -94,7 +102,9 @@ export default {
 	.selected .oi {
 		color: #039be5;
 	}
-
+	.error {
+		color: #cc0000;
+	}
 	a {
 		color: #42b983;
 	}
