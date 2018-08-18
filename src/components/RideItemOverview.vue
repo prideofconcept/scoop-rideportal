@@ -8,7 +8,7 @@
 
 		<div class="col-12 white--text" v-show="(isSelecteder && isDriver)">
 			<i class="oi oi-media-play"></i>
-			<button v-on:click.prevent="onStartRide" v-if="!isCurrentRide">Start Ride</button>
+			<button v-on:click.prevent="onStartRide" v-if="!isCurrentRide">Select Ride</button>
 			<button v-on:click.prevent="onStopRide" v-if="isCurrentRide">Finish Ride</button>
 		</div>
 	</div>
@@ -49,7 +49,7 @@ export default {
 			this.$store.dispatch('startRide', this.ride)
 			this.isCurrentRide = true
 		},
-		onStopRide: function (e) {
+		onDeactivateRide: function (e) {
 			// throw up a warning before allowing this action
 			this.$store.dispatch('stopRide', this.ride)
 			this.isCurrentRide = false

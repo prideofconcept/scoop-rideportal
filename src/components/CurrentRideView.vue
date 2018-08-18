@@ -5,48 +5,70 @@
 		<div class="row">
 			<div class="col-12">
 				<h6 class="text-center">{{currentRide.summary}}</h6>
-				<p>status: </p>
+				<p>status: {{currentStep.label}} </p>
 				<google-map/>
 			</div>
 		</div>
 
-		<section class="row steps pb-4">
-			<div class="col-12" v-show="step_pickup"><button class="btn btn-small" v-bind:href="pickupHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to pickup</button></div>
-			<div class="col-12" v-show="step_pickup">Meet / Pickup Child</div>
-			<div class="col-12" v-show="step_pickup">
-				Check Safety and Start Navigation
-				<br/>
-				<button class="btn btn-small" v-bind:href="dropoffHref" target="_blank"><i>Nav to Dropoff</i></button></div>
-			<div class="col-12" v-show="step_pickup">
-				Walk Child to Drop-off
-			</div>
-			<div class="col-12" v-show="step_pickup">
-				Finish Ride
-			</div>
-			<div class="col-12">
-				<button class="btn btn-light text-center"><h4><i class="oi oi-arrow-right-angle"></i>Next Step</h4></button>
-			</div>
-		</section>
-
-		<div id="rideControlPanel" class="row" v-show="(isDriver)">
+		<section id="rideOverview" class="row">
 			<div class="col-6">
 				<div class="nav-display">
 					<p class="nav-desc"><span><i class="oi oi-data-transfer-download mr-2"></i>pickup:</span><br/> {{currentRide.location}}</p>
-					<a class="btn btn-small btn-secondary" v-bind:href="pickupHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to pickup</a>
-					<a class="btn btn-small btn-secondary-white" v-bind:href="pickupWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
 				</div>
 			</div>
 			<div class="col-6">
 				<div class="nav-display">
 					<p class="nav-desc"><span><i class="oi oi-data-transfer-upload mr-2"></i>drop-off:</span><br/> {{currentRide.description}}</p>
-					<a class="btn btn-small btn-secondary" v-bind:href="dropoffHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to dest</a>
+				</div>
+			</div>
+		</section>
+
+		<section class="row steps pb-4">
+			<div class="col-12">
+				<div class="text-center">
+					<h6 class="text-uppercase"><i class="oi oi-arrow-right-angle"></i>{{currentStep.label}}</h6>
+					<h6><i class="oi oi-arrow-right-angle"></i>{{isDriver ? currentStep.driverDesc : currentStep.parentDesc}}</h6>
+				</div>
+			</div>
+			<div class="col-12" v-show="currentStep.id === 'nav_to_pickup'">
+					<a class="btn btn-small btn-secondary" v-bind:href="pickupHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to pickup</a>
+					<a class="btn btn-small btn-secondary-white" v-bind:href="pickupWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
+			</div>
+			<div class="col-12" v-show="currentStep.id === 'nav_to_dropoff'">
+				Check Safety and Start Navigation
+				<br/>
+				<a class="btn btn-small btn-secondary" v-bind:href="dropoffHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to dest</a>
+				<a class="btn btn-small btn-secondary-white" v-bind:href="dropoffWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
+			</div>
+			<div class="col-12">
+				<br/>
+				<button class="btn btn-light text-center" v-on:click.prevent="onNextStep">
+					<h4><i class="oi oi-chevron-right">&nbsp;</i>{{currentStep.driverButtonTitle ? currentStep.driverButtonTitle : 'Next Step'}}</h4>
+				</button>
+			</div>
+		</section>
+
+		<div id="rideControlPanel" class="row" v-show="(isDriver)">
+			<div class="col-6 hide">
+				<div class="nav-display">
+					<p class="nav-desc"><span><i class="oi oi-data-transfer-download mr-2"></i>pickup:</span><br/> {{currentRide.location}}</p>
+					<a class="btn btn-small btn-secondary" v-bind:href="pickupHref" target="_blank"><i class="oi oi-location mr-2"></i>pickup</a>
+					<a class="btn btn-small btn-secondary-white" v-bind:href="pickupWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
+				</div>
+			</div>
+			<div class="col-6 hide">
+				<div class="nav-display">
+					<p class="nav-desc"><span><i class="oi oi-data-transfer-upload mr-2"></i>drop-off:</span><br/> {{currentRide.description}}</p>
+					<a class="btn btn-small btn-secondary" v-bind:href="dropoffHref" target="_blank"><i class="oi oi-location mr-2"></i>dest</a>
 					<a class="btn btn-small btn-secondary-white" v-bind:href="dropoffWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
 				</div>
 			</div>
 			<div class="col-12">
 				<p>notes:</p>
-				<div class="white--text">
-					<button v-on:click.prevent="onStopRide" class="btn btn-light">Finish Ride</button>
+				<p>{{currentRide.description}}</p>
+				<hr/>
+				<div>
+					<button v-on:click.prevent="onDeactivateRide" class="btn btn-error btm-small">Deactivate Ride</button>
 				</div>
 			</div>
 		</div>
@@ -60,8 +82,10 @@
 import * as firebase from 'firebase'
 import Firestore from '@/firebase/firestore'
 import GoogleMap from "@/components/GoogleMaps";
+import stepsOfService from "@/data/stepsOfService";
+import { mapState } from 'vuex'
 
-const currentRideCollection = Firestore.collection('ride_current') // todo: s houdl the collections be exported from the firebase module
+const currentRideCollection = Firestore.collection('ride_current') // todo: should the collections be exported from the firebase module
 
 export default {
 	components: {
@@ -71,22 +95,37 @@ export default {
 	},
 	data () {
 		return {
+			stepsOfService: stepsOfService,
+			currentStep: null,
+			currentStepIndx: 0,
 			step_pickup: true,
+			testData: true
 		}
 	},
 	computed: {
-		currentRide () { return this.$store.state.ride.currentRide },
-		isDriver () { return this.$store.state.account.isDriver },
-		destination () { return this.currentRide.destination },
+		currStep () {return stepsOfService[currentStepIndx]},
 		pickupHref () { return `http://maps.google.com/?daddr=${this.currentRide.location}` },
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.destination}` },
 		pickupWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.location)}` },
 		dropoffWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.destination)}` },
+		...mapState({
+			currentRide: state => state.ride.currentRide,
+			isDriver: state => state.account.isDriver,
+		})
 	},
 	methods: {
-		onStopRide: function (e) {
+		onDeactivateRide: function (e) {
 			// throw up a warning before allowing this action
-			this.$store.dispatch('stopRide', this.currentRide)
+			const r = confirm("Deactivate Ride?! - this is not the normal process to end a ride");
+			 if(!r) return
+
+			this.$store.dispatch('stopRide', currentRide)
+		},
+		onNextStep: function (e) {
+			if(this.stepsOfService.length > this.currentStepIndx){
+				this.currentStepIndx = this.currentStepIndx + 1;
+				this.currentStep = this.stepsOfService[this.currentStepIndx]
+			}
 		},
 		handleCurrentRideUpdate: function (querySnapshot) {
 
@@ -123,7 +162,8 @@ export default {
 		}
 	},
 	mounted () {
-		console.log('asking for current ride')
+		this.currentStep = stepsOfService[this.currentStepIndx]
+		console.log('asking for current ride',this.isDriver2)
 		currentRideCollection
 			.where('guardian.email', '==', firebase.auth().currentUser.email )
 			.onSnapshot(this.handleCurrentRideUpdate.bind(this),
@@ -149,6 +189,12 @@ export default {
 		text-transform: uppercase;
 	}
 
+	#rideOverview p{
+		font-size: 12px;
+	}
+
+	.hide {display: none;}
+	p {font-size: 14px;}
 	.oi {
 		top: 4px;
 		opacity: .6;
@@ -157,23 +203,30 @@ export default {
 		margin: 8px 0;
 	}
 	.nav-desc {
-		min-height: 100px;
+		min-height: 80px;
 	}
 	.nav-desc span{
 		font-size: 12px;
 		font-weight: bold;
 	}
+	button h4{margin: 0;}
+	button h4 i{font-size: 16px;line-height: 24px;top:0 !important;}
 	.btn{
 		color: #42b983;
 		font-size: 14px;
+	}
+	.btn-error {
+		background-color: #cc0000;
+		color:#fff;
+		font-weight: bold;
+		font-size: 12px;
+		text-transform: uppercase;
+		padding: 5px 26px;
 	}
 	.btn-secondary {
 		background-color: #ECEFF1;
 	}
 	.btn-secondary-white {
 		background-color: #fff;
-	}
-	.steps {
-		display: none;
 	}
 </style>
