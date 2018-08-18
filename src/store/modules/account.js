@@ -32,7 +32,7 @@ export default () => ({
 		},
 		reportUserIsDriver: (state, payload) => {
 			state.isDriver = payload
-			state.isMetaDataLoaded = true;
+			state.isMetaDataLoaded = true
 		},
 	},
 	actions: {

@@ -45,7 +45,7 @@ export default {
 			return this.formatDate(new Date(this.ride.startdate))
 		},
 		...mapState({
-				currentRide: state => state.ride.currentRide,
+			currentRide: state => state.ride.currentRide,
 		})
 	},
 	methods: {

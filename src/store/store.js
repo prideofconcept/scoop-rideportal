@@ -81,7 +81,7 @@ export default new Vuex.Store({
 				.then(snapshot => {
 					snapshot.forEach(doc => {
 						console.log(doc.id, '=>', doc.data())
-						if (isRideWithinWeek(doc.data())){
+						if (isRideWithinWeek(doc.data())) {
 							rides.push(doc.data())
 							ridesFamily.push(doc.data())
 						}
@@ -107,7 +107,7 @@ export default new Vuex.Store({
 
 			Promise.all([gurdnPrms, drvrPrms])
 				.then( results => {
-					console.log('done loading events',rides)
+					console.log('done loading events', rides)
 					commit('setEvents', rides)
 					commit('setEventsFetching', false)
 
@@ -115,8 +115,8 @@ export default new Vuex.Store({
 
 			const isRideWithinWeek = ride => {
 				// todo : only show rides that are 7 days in the future
-				const now = new Date();
-				let lastWeek = new Date();
+				const now = new Date()
+				let lastWeek = new Date()
 				lastWeek.setDate(now.getDate() - 7)
 				console.log('comparing dates', ride.summary, lastWeek, ride.startdate,Date.parse(ride.startdate) > lastWeek)
 

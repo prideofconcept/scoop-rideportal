@@ -7,7 +7,7 @@ import App from './App'
 import router from './router'
 import store from './store/store'
 
-import * as VueGoogleMaps from "vue2-google-maps";
+import * as VueGoogleMaps from 'vue2-google-maps'
 
 import VueGAPI from 'vue-gapi'
 import VueLocalStorage from 'vue-localstorage'
@@ -31,10 +31,10 @@ Vue.use(VueLocalStorage)
 Vue.use(Vuex)
 Vue.use(VueGoogleMaps, {
 	load: {
-		key: "AIzaSyCIyQ7nNZDSIQgMUFJ9dT1FEpsLVmpLYLw",
+		key: 'AIzaSyCIyQ7nNZDSIQgMUFJ9dT1FEpsLVmpLYLw',
 		libraries: "places, geocoder" // necessary for places input
 	}
-});
+})
 /* eslint-disable no-new */
 firebase.auth().onAuthStateChanged((user) => {
 	new Vue({
@@ -46,11 +46,10 @@ firebase.auth().onAuthStateChanged((user) => {
 		created () {
 			// todo: add in created functions from  https://github.com/academind/yt-devmeetup-vue-firebase/blob/14-save-firebase-check-auth/src/main.js
 			// this.$store.dispatch('GET_CALRIDES', {$getGapiClient: this.$getGapiClient})
-				if(user != null) {
-					this.$store.dispatch('LOGIN_SUCCESS', user)
-					this.$store.dispatch('GET_DB_RIDES')
-				}
+			if(user != null) {
+				this.$store.dispatch('LOGIN_SUCCESS', user)
+				this.$store.dispatch('GET_DB_RIDES')
+			}
 		}
 	})
 })
-

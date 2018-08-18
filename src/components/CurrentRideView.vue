@@ -72,8 +72,6 @@
 				</div>
 			</div>
 		</div>
-
-
 	</div>
 
 </template>
@@ -81,8 +79,8 @@
 <script>
 import * as firebase from 'firebase'
 import Firestore from '@/firebase/firestore'
-import GoogleMap from "@/components/GoogleMaps";
-import { stepsOfService, getStepFromId} from "@/data/stepsOfService";
+import GoogleMap from '@/components/GoogleMaps'
+import { stepsOfService, getStepFromId} from '@/data/stepsOfService'
 import { mapState } from 'vuex'
 
 const currentRideCollection = Firestore.collection('ride_current') // todo: should the collections be exported from the firebase module
@@ -118,19 +116,19 @@ export default {
 			const r = confirm("Deactivate Ride?! - this is not the normal process to end a ride");
 			 if(!r) return
 
-			this.$store.dispatch('stopRide', currentRide)
+			this.$store.dispatch('stopRide', this.currentRide)
 		},
 		onNextStep: function (e) {
-			if(this.currentStep){
-				if ( !this.currentStep.isLastStep){
-					this.currentStep = this.stepsOfService[this.currentStep.index + 1];
+			if(this.currentStep) {
+				if ( !this.currentStep.isLastStep) {
+					this.currentStep = this.stepsOfService[this.currentStep.index + 1]
 					this.$store.dispatch('SET_CURRENT_STEP', this.currentStep.id)
 				} else if (this.currentStep.isLastStep) {
 
 				}
 			}
 		},
-		setCurrentStepFromId:function(id) {
+		setCurrentStepFromId: function (id) {
 
 		},
 		handleCurrentRideUpdate: function (querySnapshot) {
@@ -147,23 +145,25 @@ export default {
 
 			querySnapshot.forEach(function (doc) {
 				const currRide = doc.data()
-				console.log('when loading ride - currentStep=',currRide.currentStep)
+				console.log('when loading ride - currentStep=', currRide.currentStep)
 				this.currentStep = currRide.currentStep ? getStepFromId(currRide.currentStep) : this.stepsOfService[0]
 				this.$store.dispatch('SET_CURRRIDE', doc.data())
 			}.bind(this))
 
-			if(this.isDriver ){
-				if(navigator.geolocation)
+			if(this.isDriver ) {
+				if(navigator.geolocation) {
 					navigator.geolocation.getCurrentPosition(this.onPositionUpdate.bind(this))
-				else
+				}
+				else {
 					alert('navigator.geolocation is not available')
+				}
 			}
 		},
 		onPositionUpdate: function (position) {
 
-			if(position.coords){
-				var lat = position.coords.latitude;
-				var lng = position.coords.longitude;
+			if(position.coords) {
+				var lat = position.coords.latitude
+				var lng = position.coords.longitude
 				if (this.$store) {
 					console.log('this.$store', this.$store)
 					this.$store.dispatch('SET_CURRRIDE_LOCATION', { lat, lng })
@@ -172,15 +172,16 @@ export default {
 		}
 	},
 	mounted () {
-		//this.currentStep = this.currentRide.currentStep ? this.currentRide.currentStep : stepsOfService[0]
-		const queryContraint = this.isDriver? 'driver.email' : 'guardian.email';
-		console.log('asking for current ride',this.isDriver,queryContraint)
+		// this.currentStep = this.currentRide.currentStep ? this.currentRide.currentStep : stepsOfService[0]
+		const queryContraint = this.isDriver ? 'driver.email' : 'guardian.email'
+		console.log('asking for current ride', this.isDriver, queryContraint)
 
-		//todo: make sure we only calculate this, once app has loaded, and in a more global place
+		// todo: make sure we only calculate this, once app has loaded, and in a more global place
 		currentRideCollection
 			.where(queryContraint, '==', firebase.auth().currentUser.email )
 			.onSnapshot(this.handleCurrentRideUpdate.bind(this),
-				(error) => { console.log('Error getting documents: ', error)
+				(error) => {
+					console.log('Error getting documents: ', error)
 				})
 
 	}

@@ -39,14 +39,14 @@ export default () => ({
 			} else {
 				state.onRide = false
 			}
-		}*/
+		} */
 	},
 	actions: {
 		SET_CURRRIDE_LOCATION ({commit, state}, payload) {
 			currentRideCollection.doc(state.currentRide.id)
 				.set({
 					current_locale: payload
-				},{merge: true})
+				}, {merge: true})
 		},
 		startRide ({ commit, state }, payload) {
 			const ride = payload
@@ -79,22 +79,22 @@ export default () => ({
 					guardian: ride.guardian,
 				})
 		},
-		SET_CURRENT_STEP({ commit, state }, payload) {
-			const currentRideId = payload;
+		SET_CURRENT_STEP ({ commit, state }, payload) {
+			const currentRideId = payload
 			const currRide = state.currentRide
-			console.log('updating ride to step ', currentRideId);
+			console.log('updating ride to step ', currentRideId)
 
 			currentRideCollection
 				.doc(`${currRide.id}`)
 				.set({currentStep: currentRideId},
 					{merge: true})
 				.then(() => {
-					//todo do we need to commit anything here?
+					// todo do we need to commit anything here?
 					console.log('step saved in currentRide')
 				})
 		},
 		stopRide ({ commit, state }, payload) {
-			const ride = payload
+			const ride = payload // todo: use the current ride from the state
 			console.log('stopping ride', ride.id)
 
 			// todo: move to util module
