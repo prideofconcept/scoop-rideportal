@@ -79,8 +79,19 @@ export default () => ({
 					guardian: ride.guardian,
 				})
 		},
-		setStep({ commit, state }, payload) {
+		SET_CURRENT_STEP({ commit, state }, payload) {
+			const currentRideId = payload;
+			const currRide = state.currentRide
+			console.log('updating ride to step ', currentRideId);
 
+			currentRideCollection
+				.doc(`${currRide.id}`)
+				.set({currentStep: currentRideId},
+					{merge: true})
+				.then(() => {
+					//todo do we need to commit anything here?
+					console.log('step saved in currentRide')
+				})
 		},
 		stopRide ({ commit, state }, payload) {
 			const ride = payload

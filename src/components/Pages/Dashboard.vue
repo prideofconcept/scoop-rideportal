@@ -74,7 +74,7 @@ export default {
 	},
 
 	updated () {
-		console.log('updateded: currentRide', this.currentRide)
+		console.log('Dashboard updated: currentRide', this.currentRide)
 
 	}
 }

@@ -27,7 +27,7 @@
 			<div class="col-12">
 				<div class="text-center">
 					<h6 class="text-uppercase"><i class="oi oi-arrow-right-angle"></i>{{currentStep.label}}</h6>
-					<h6><i class="oi oi-arrow-right-angle"></i>{{isDriver ? currentStep.driverDesc : currentStep.parentDesc}}</h6>
+					<p class="font-weight-bold"><i class="oi oi-arrow-right-angle"></i>{{isDriver ? currentStep.driverDesc : currentStep.parentDesc}}</p>
 				</div>
 			</div>
 			<div class="col-12" v-show="currentStep.id === 'nav_to_pickup'">
@@ -35,7 +35,7 @@
 					<a class="btn btn-small btn-secondary-white" v-bind:href="pickupWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
 			</div>
 			<div class="col-12" v-show="currentStep.id === 'nav_to_dropoff'">
-				Check Safety and Start Navigation
+				<p class="m-0">Check Safety and Start Navigation</p>
 				<br/>
 				<a class="btn btn-small btn-secondary" v-bind:href="dropoffHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to dest</a>
 				<a class="btn btn-small btn-secondary-white" v-bind:href="dropoffWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
@@ -82,7 +82,7 @@
 import * as firebase from 'firebase'
 import Firestore from '@/firebase/firestore'
 import GoogleMap from "@/components/GoogleMaps";
-import stepsOfService from "@/data/stepsOfService";
+import { stepsOfService, getStepFromId} from "@/data/stepsOfService";
 import { mapState } from 'vuex'
 
 const currentRideCollection = Firestore.collection('ride_current') // todo: should the collections be exported from the firebase module
@@ -97,13 +97,12 @@ export default {
 		return {
 			stepsOfService: stepsOfService,
 			currentStep: null,
-			currentStepIndx: 0,
 			step_pickup: true,
 			testData: true
 		}
 	},
 	computed: {
-		currStep () {return stepsOfService[currentStepIndx]},
+		//currStep () {return stepsOfService[currentStepIndx]},
 		pickupHref () { return `http://maps.google.com/?daddr=${this.currentRide.location}` },
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.destination}` },
 		pickupWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.location)}` },
@@ -122,10 +121,17 @@ export default {
 			this.$store.dispatch('stopRide', currentRide)
 		},
 		onNextStep: function (e) {
-			if(this.stepsOfService.length > this.currentStepIndx){
-				this.currentStepIndx = this.currentStepIndx + 1;
-				this.currentStep = this.stepsOfService[this.currentStepIndx]
+			if(this.currentStep){
+				if ( !this.currentStep.isLastStep){
+					this.currentStep = this.stepsOfService[this.currentStep.index + 1];
+					this.$store.dispatch('SET_CURRENT_STEP', this.currentStep.id)
+				} else if (this.currentStep.isLastStep) {
+
+				}
 			}
+		},
+		setCurrentStepFromId:function(id) {
+
 		},
 		handleCurrentRideUpdate: function (querySnapshot) {
 
@@ -140,6 +146,9 @@ export default {
 			}
 
 			querySnapshot.forEach(function (doc) {
+				const currRide = doc.data()
+				console.log('when loading ride - currentStep=',currRide.currentStep)
+				this.currentStep = currRide.currentStep ? getStepFromId(currRide.currentStep) : this.stepsOfService[0]
 				this.$store.dispatch('SET_CURRRIDE', doc.data())
 			}.bind(this))
 
@@ -163,10 +172,11 @@ export default {
 		}
 	},
 	mounted () {
-		this.currentStep = stepsOfService[this.currentStepIndx]
-		const queryContraint = this.isDriver? 'driver.email' : 'guardian.email';
+		//this.currentStep = this.currentRide.currentStep ? this.currentRide.currentStep : stepsOfService[0]
+		const queryContraint = true? 'driver.email' : 'guardian.email';
 		console.log('asking for current ride',this.isDriver,queryContraint)
 
+		//todo: make sure we only calculate this, once app has loaded, and in a more global place
 		currentRideCollection
 			.where(queryContraint, '==', firebase.auth().currentUser.email )
 			.onSnapshot(this.handleCurrentRideUpdate.bind(this),
