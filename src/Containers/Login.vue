@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import firebaseApp from '../../firebase/index'
+import firebaseApp from '../firebase/index'
 import * as firebase from 'firebase'
 
 export default {

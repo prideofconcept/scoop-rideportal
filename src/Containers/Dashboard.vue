@@ -27,10 +27,10 @@
 </template>
 
 <script>
-import firebaseApp from '../../firebase/index'
-import RideItemOverview from '../RideItemOverview'
-import LoadingIndicator from '../loadingIndicator'
-import CurrentRideView from '../CurrentRideView'
+import firebaseApp from '../firebase/index'
+import RideItemOverview from '../components/RideItemOverview'
+import LoadingIndicator from '../components/loadingIndicator'
+import CurrentRideView from '../components/CurrentRideView'
 export default {
 	components: {RideItemOverview, CurrentRideView, LoadingIndicator},
 	name: 'Dashboard',

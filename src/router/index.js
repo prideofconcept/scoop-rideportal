@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Dashboard from '@/components/Pages/Dashboard'
-import Login from '@/components/Pages/Login'
+import Dashboard from '@/Containers/Dashboard'
+import Login from '@/Containers/Login'
 import store from '@/store/store'
 import firebase from '@/firebase/'
 
