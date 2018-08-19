@@ -68,7 +68,7 @@
 				<p>{{currentRide.description}}</p>
 				<hr/>
 				<div>
-					<button v-on:click.prevent="onDeactivateRide" class="btn btn-error btm-small">Deactivate Ride</button>
+					<button v-on:click.prevent="onDeactivateRide" class="btn btn-error btm-small" :disabled="currentStep.id === 'complete'">Deactivate Ride</button>
 				</div>
 			</div>
 		</div>
@@ -105,6 +105,7 @@ export default {
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.destination}` },
 		pickupWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.location)}` },
 		dropoffWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.destination)}` },
+		//isRideActive (){ return this.currentStep.id === 'complete'},
 		...mapState({
 			currentRide: state => state.ride.currentRide,
 			isDriver: state => state.account.isDriver,
@@ -116,52 +117,63 @@ export default {
 			const r = confirm("Deactivate Ride?! - this is not the normal process to end a ride");
 			 if(!r) return
 
-			this.$store.dispatch('STOP_CURRENT_RIDE')
+			this.stopCurrentRide()
 		},
 		onNextStep: function (e) {
+			debugger;
 			if(this.currentStep) {
 				if ( !this.currentStep.isLastStep) {
 					this.currentStep = this.stepsOfService[this.currentStep.index + 1]
 					this.$store.dispatch('SET_CURRENT_STEP', this.currentStep.id)
-				} else if (this.currentStep.isLastStep) {
-
+				} else if (this.currentStep.isLastStep || this.currentStep.id === 'complete') {
+					this.stopCurrentRide()
 				}
 			}
 		},
-		setCurrentStepFromId: function (id) {
-
+		stopCurrentRide: function () {
+			this.currentStep = null
+			this.$store.dispatch('STOP_CURRENT_RIDE')
 		},
 		handleCurrentRideUpdate: function (querySnapshot) {
 
-			querySnapshot.docChanges().forEach(function (change) {
+			const changes = querySnapshot.docChanges()
+
+			changes.forEach((change, idx, array) => {
+				console.log(change)
 				if (change.type === 'removed') {
 					this.$store.dispatch('SET_CURRRIDE', null)
+					return
 				}
-			}.bind(this))
+				else if (change.type === 'modified') {
+					// todo check if location changed
+					// this.$store.dispatch('SET_CURRRIDE', null)
+					console.log('current event modified')
+					return
+				}
+				else if (change.type === 'added') {
+					const currRide = change.doc.data()
+					console.log('change - currRide, self, this',currRide)
+					this.currentStep = currRide.currentStep ? getStepFromId(currRide.currentStep) : this.stepsOfService[0]
+					this.$store.dispatch('SET_CURRRIDE', currRide)
+					if(this.isDriver ) {
+						if(navigator.geolocation) {
+							try{
+								navigator.geolocation.getCurrentPosition(this.onPositionUpdate.bind(this))
+							} catch(e) {
+								console.log('navigator error',e)
+							}
+						}
+						else {
+							alert('navigator.geolocation is not available')
+						}
+					}
+				}
+			});
 
 			if(querySnapshot.empty || querySnapshot.docs.length <= 0) {
 				return
 			}
 
-			querySnapshot.forEach(function (doc) {
-				const currRide = doc.data()
-				console.log('when loading ride - currentStep=', currRide.currentStep)
-				this.currentStep = currRide.currentStep ? getStepFromId(currRide.currentStep) : this.stepsOfService[0]
-				this.$store.dispatch('SET_CURRRIDE', doc.data())
-			}.bind(this))
-
-			if(this.isDriver ) {
-				if(navigator.geolocation) {
-					try{
-						navigator.geolocation.getCurrentPosition(this.onPositionUpdate.bind(this))
-					} catch(e) {
-						console.log('navigator error',e)
-					}
-				}
-				else {
-					alert('navigator.geolocation is not available')
-				}
-			}
 		},
 		onPositionUpdate: function (position) {
 

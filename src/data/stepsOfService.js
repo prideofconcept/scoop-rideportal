@@ -1,7 +1,7 @@
 export const stepsOfService = [
 	{
 		id: 'activated',
-		index: 1,
+		index: 0,
 		label: 'Ride Active',
 		driverDesc: 'Ride ready, and ready to be started',
 		driverButtonTitle: 'Start Ride',
@@ -10,7 +10,7 @@ export const stepsOfService = [
 	},
 	{
 		id: 'nav_to_pickup',
-		index:2,
+		index:1,
 		label: 'Navigating to pick-up point',
 		driverDesc: 'Click the navigation link, navigate to pickup point',
 		parentDesc: 'Drvier is enroute to pickup point',
@@ -18,7 +18,7 @@ export const stepsOfService = [
 	},
 	{
 		id: 'pickup',
-		index: 3,
+		index: 2,
 		label: 'Pickup : Meeting Child',
 		driverDesc: 'Pickup child, leave vehicle if necessary',
 		parentDesc: 'Driver is ready to pickup child',
@@ -26,7 +26,7 @@ export const stepsOfService = [
 	},
 	{
 		id: 'nav_to_dropoff',
-		index: 4,
+		index: 3,
 		label: 'Driving Child to drop-off point',
 		driverDesc: 'Secure child, navigate to drop-off location',
 		parentDesc: 'Driver is navigating to destination',
@@ -34,7 +34,7 @@ export const stepsOfService = [
 	},
 	{
 		id: 'dropoff',
-		index: 5,
+		index: 4,
 		label: 'Droping off child',
 		driverDesc: 'Deliver child safely to drop-off point',
 		parentDesc: 'Driver has arrived, delivering child to drop-off location',
@@ -42,7 +42,7 @@ export const stepsOfService = [
 	},
 	{
 		id: 'complete',
-		index: 6,
+		index: 5,
 		label: 'Ride finalized',
 		driverDesc: 'Ride has ended',
 		driverButtonTitle: 'Complete Ride',
@@ -52,6 +52,4 @@ export const stepsOfService = [
 	},
 ]
 
-export const getStepFromId = (id) => {
-	return stepsOfService.filter((step) => (step.id === id))[0]
-}
+export const getStepFromId = (id) => ( stepsOfService.filter((step) => (step.id === id))[0] )
