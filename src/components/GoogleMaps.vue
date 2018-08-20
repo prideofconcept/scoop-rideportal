@@ -1,12 +1,14 @@
 <template>
-  <div class="d-flex flex-column justify-content-center">
+  <div class="d-flex flex-column align-items-center">
     <div>
       <h6>Ride Current Location</h6>
     </div>
     <gmap-map
 		:center="center"
 		:zoom="12"
-		style="width:100%;  height: 400px;"
+		v-bind:class="{fullMapView: !isDriver, driverMapView : isDriver}"
+		ref="gmap"
+		:options="{fullscreenControl: false, mapTypeControl: false, streetViewControl: false}"
     >
       <gmap-marker
 		:key="index"
@@ -20,6 +22,8 @@
 
 <script>
 import { gmapApi } from 'vue2-google-maps'
+import { mapState } from 'vuex'
+
 export default {
 	name: "GoogleMap",
 	data () {
@@ -34,18 +38,24 @@ export default {
 	computed: {
 		google: gmapApi,
 		//geocoder: this.google ? new this.google.maps.Geocoder() : null,
-
-		currentRide () { return this.$store.state.ride.currentRide },
 		pickup () { return this.currentRide.location },
 		destination () { return this.currentRide.destination },
 		markers () { return [
 			{ /*position:this.getLatLng(this.pickup),*/ latlng: { lat: 33.753746, lng: -84.386330 } },
 			{ /*position:this.getLatLng(this.destination),*/ latlang: { lat: 33.8463, lng: -84.362 } },
-		]}
+		]},
+		...mapState({
+			currentRide: state => state.ride.currentRide,
+			isDriver: state => state.account.isDriver,
+		})
 	},
 	mounted () {
-		this.geolocate()
-		console.log('markers', this.pickup, this.destination)
+		//this.google.map.mapTypeControlOptions = false;
+		console.log('in map - markers', this.pickup, this.destination)
+		console.log('in map - is prosmise',this.$refs.gmap)
+		this.$refs.gmap.$mapPromise.then((gmapObject) => {
+			this.geolocate()
+		})
 		//this.geocoder = new this.google.maps.Geocoder()
 	},
 
@@ -95,3 +105,12 @@ export default {
 	}
 }
 </script>
+
+<style scoped>
+	.fullMapView {
+		width:100%;  height: 400px;
+	}
+	.driverMapView {
+		width:80%;  height: 260px;
+	}
+</style>
