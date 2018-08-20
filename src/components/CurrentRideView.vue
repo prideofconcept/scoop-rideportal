@@ -139,7 +139,7 @@ export default {
 					console.log('change - currRide, self, this',currRide)
 					this.currentStep = currRide.currentStep ? getStepFromId(currRide.currentStep) : this.stepsOfService[0]
 					this.$store.dispatch('SET_CURRRIDE', currRide)
-					if(this.isDriver ) {
+					if( this.isDriver ) {
 						if(navigator.geolocation) {
 							try{
 								navigator.geolocation.getCurrentPosition(this.onPositionUpdate.bind(this))

@@ -32,7 +32,8 @@ export default {
 			// change this to whatever makes sense
 			center: { lat: 29.9511, lng: 90.07 },
 			places: [],
-			currentPlace: null
+			markers: [],
+			currentPlace: null,
 		}
 	},
 	computed: {
@@ -40,10 +41,10 @@ export default {
 		//geocoder: this.google ? new this.google.maps.Geocoder() : null,
 		pickup () { return this.currentRide.location },
 		destination () { return this.currentRide.destination },
-		markers () { return [
-			{ /*position:this.getLatLng(this.pickup),*/ latlng: { lat: 33.753746, lng: -84.386330 } },
-			{ /*position:this.getLatLng(this.destination),*/ latlang: { lat: 33.8463, lng: -84.362 } },
-		]},
+		/*markers () { return [
+			{ latlng: { lat: 33.753746, lng: -84.386330 } },
+			{ latlang: { lat: 33.8463, lng: -84.362 } },
+		]},*/
 		...mapState({
 			currentRide: state => state.ride.currentRide,
 			isDriver: state => state.account.isDriver,
@@ -51,12 +52,18 @@ export default {
 	},
 	mounted () {
 		//this.google.map.mapTypeControlOptions = false;
-		console.log('in map - markers', this.pickup, this.destination)
-		console.log('in map - is prosmise',this.$refs.gmap)
+		console.log('in map pickup, dest ', this.pickup, this.destination)
+
 		this.$refs.gmap.$mapPromise.then((gmapObject) => {
-			this.geolocate()
+			this.getLatLng()
 		})
-		//this.geocoder = new this.google.maps.Geocoder()
+
+		if(this.isDriver) {
+			this.geolocate()
+		}
+	},
+	updated() {
+		console.log('goodle map comp updated', this.markers)
 	},
 
 	methods: {
@@ -77,6 +84,7 @@ export default {
 			}
 		}, */
 		geolocate: function () {
+			// todo : do this for ride current location
 			navigator.geolocation.getCurrentPosition(position => {
 				this.center = {
 					lat: position.coords.latitude,
@@ -84,23 +92,36 @@ export default {
 				}
 			})
 		},
-		getLatLng: function (address) {
-
-			if (address === null || address === undefined || !this.google || !this.geocoder)
+		getLatLng: function () {
+			if ( (!this.pickup && !this.destination) ||  !this.google )
 				return null
-			this.geocoder.geocode( { 'address': address }, function (results, status) {
-				debugger
-				if (status === this.google.maps.GeocoderStatus.OK) {
-					/* map.setCenter(results[0].geometry.location);
-					var marker = new google.maps.Marker({
-						map: map,
-						position: results[0].geometry.location
-					}); */
-					return results[0].geometry.location
-				} else {
-					console.error('Geocode was not successful for the following reason: ' + status)
-				}
+
+			const geocoder = new this.google.maps.Geocoder();
+			const locations = [this.pickup, this.destination];
+			const vm = this;
+
+			locations.forEach((address, idx) => {
+				if(!address)
+					return
+
+				geocoder.geocode( { 'address': address }, function (results, status) {
+					if (status === this.google.maps.GeocoderStatus.OK) {
+						const lat = results[0].geometry.location.lat()
+						const lng = results[0].geometry.location.lng()
+						console.log( {lat, lng} )
+						vm.markers[idx] = {position:{lat, lng}}
+						/* map.setCenter(results[0].geometry.location);
+						var marker = new google.maps.Marker({
+							map: map,
+							position: results[0].geometry.location
+						});
+						return results[0].geometry.location*/
+					} else {
+						console.error('Geocode was not successful for the following reason: ' + status)
+					}
+				})
 			})
+
 		}
 	}
 }
