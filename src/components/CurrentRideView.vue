@@ -18,7 +18,7 @@
 			</div>
 			<div class="col-6">
 				<div class="nav-display">
-					<p class="nav-desc"><span><i class="oi oi-data-transfer-upload mr-2"></i>drop-off:</span><br/> {{currentRide.description}}</p>
+					<p class="nav-desc"><span><i class="oi oi-data-transfer-upload mr-2"></i>drop-off:</span><br/> {{currentRide.destination}}</p>
 				</div>
 			</div>
 		</section>
