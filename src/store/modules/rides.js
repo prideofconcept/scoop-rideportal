@@ -62,7 +62,7 @@ export default () => ({
 				.doc(ride.id + ' :: ' + ride.summary)
 				.set({
 					url: ride.url,
-					sceduled_time: ride.startdate,
+					scheduled_time: ride.startdate,
 					id: ride.id,
 					status: 'started',
 					start_time: date
@@ -83,6 +83,20 @@ export default () => ({
 			const currentRideId = payload
 			const currRide = state.currentRide
 			console.log('updating ride to step ', currentRideId)
+
+			rideLogCollection
+				.doc(ride.id + ' :: ' + ride.currentStep)
+				.set({
+					url: ride.url,
+					time: new Date(),
+					id: ride.id,
+					status: ride.currentStep,
+					start_time: date,
+					current_locale: ride.current_locale
+				})
+				.then(() => {
+					commit('reportSaveRideLogSuccess', true)
+				}) // todo: handle errors
 
 			currentRideCollection
 				.doc(`${currRide.id}`)

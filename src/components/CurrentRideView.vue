@@ -136,11 +136,22 @@ export default {
 						return
 					}
 
-					console.log(change)
+
+					console.log('change change',change, change.doc.metadata.hasPendingWrites)
+					if( change.doc.metadata.hasPendingWrites ) {
+						return
+					}
+
 					// todo check if location/current_locale changed
-					if( updatedRide.current_locale && updatedRide.current_locale !== this.currentRide.current_locale )
+					if( updatedRide.current_locale
+						&& (updatedRide.current_locale.lat !== this.currentRide.current_locale.lat
+							||  updatedRide.current_locale.lng !== this.currentRide.current_locale.lng) )
 					{
-						console.log('currentRide:change - locale', (updatedRide.current_locale !== this.currentRide.current_locale), this.currentRide.current_locale, updatedRide.current_locale)
+						console.log('currentRide:change - locale',
+							(updatedRide.current_locale.lat !== this.currentRide.current_locale.lat ||  updatedRide.current_locale.lng !== this.currentRide.current_locale.lng),
+							this.currentRide.current_locale,
+							updatedRide.current_locale
+						)
 						this.currentRide.current_locale = updatedRide.current_locale
 						//todo if not local change ignore ?
 					}
@@ -149,7 +160,9 @@ export default {
 					if( updatedRide.currentStep && updatedRide.currentStep !== this.currentRide.currentStep )
 					{
 						console.log('currentRide:change - currentStep', (updatedRide.currentStep !== this.currentRide.currentStep), this.currentRide.currentStep, updatedRide.currentStep)
-						this.currentRide.currentStep = getStepFromId(updatedRide.currentStep)
+						if(!this.isDriver) {
+							this.currentRide.currentStep = getStepFromId(updatedRide.currentStep)
+						}
 						//todo if not local change update currentEvent in state?
 					}
 				}
