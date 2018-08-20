@@ -72,6 +72,11 @@ export default {
 		},
 	},
 	created () {
+	},
+	updated () {
+		if(this.currentRide === null || this.currentRide.is !== this.ride.id) {
+			this.isCurrentRide = false;
+		}
 	}
 }
 </script>

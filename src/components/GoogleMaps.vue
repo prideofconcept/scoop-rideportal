@@ -1,13 +1,12 @@
 <template>
-  <div>
+  <div class="d-flex flex-column justify-content-center">
     <div>
-      <h4>Ride Current Location</h4>
+      <h6>Ride Current Location</h6>
     </div>
-    <br>
     <gmap-map
-	    :center="center"
-	    :zoom="12"
-	    style="width:100%;  height: 400px;"
+		:center="center"
+		:zoom="12"
+		style="width:100%;  height: 400px;"
     >
       <gmap-marker
 		:key="index"

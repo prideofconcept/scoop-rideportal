@@ -23,7 +23,7 @@
 			</div>
 		</section>
 
-		<section class="row steps pb-4">
+		<section class="row steps pb-4" v-show="isDriver">
 			<div class="col-12">
 				<div class="text-center">
 					<h6 class="text-uppercase"><i class="oi oi-arrow-right-angle"></i>{{currentStep.label}}</h6>
@@ -48,21 +48,7 @@
 			</div>
 		</section>
 
-		<div id="rideControlPanel" class="row" v-show="(isDriver)">
-			<div class="col-6 hide">
-				<div class="nav-display">
-					<p class="nav-desc"><span><i class="oi oi-data-transfer-download mr-2"></i>pickup:</span><br/> {{currentRide.location}}</p>
-					<a class="btn btn-small btn-secondary" v-bind:href="pickupHref" target="_blank"><i class="oi oi-location mr-2"></i>pickup</a>
-					<a class="btn btn-small btn-secondary-white" v-bind:href="pickupWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
-				</div>
-			</div>
-			<div class="col-6 hide">
-				<div class="nav-display">
-					<p class="nav-desc"><span><i class="oi oi-data-transfer-upload mr-2"></i>drop-off:</span><br/> {{currentRide.description}}</p>
-					<a class="btn btn-small btn-secondary" v-bind:href="dropoffHref" target="_blank"><i class="oi oi-location mr-2"></i>dest</a>
-					<a class="btn btn-small btn-secondary-white" v-bind:href="dropoffWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
-				</div>
-			</div>
+		<div id="rideControlPanel" class="row" v-show="isDriver">
 			<div class="col-12">
 				<p>notes:</p>
 				<p>{{currentRide.description}}</p>
@@ -221,7 +207,7 @@ export default {
 		top: 4px;
 		opacity: .6;
 	}
-	.nav-display a{
+	.nav-display{
 		margin: 8px 0;
 	}
 	.nav-desc {
