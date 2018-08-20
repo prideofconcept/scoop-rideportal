@@ -115,12 +115,11 @@ export default {
 		onDeactivateRide: function (e) {
 			// throw up a warning before allowing this action
 			const r = confirm("Deactivate Ride?! - this is not the normal process to end a ride");
-			 if(!r) return
+			if(!r) return
 
 			this.stopCurrentRide()
 		},
 		onNextStep: function (e) {
-			debugger;
 			if(this.currentStep) {
 				if ( !this.currentStep.isLastStep) {
 					this.currentStep = this.stepsOfService[this.currentStep.index + 1]
@@ -137,7 +136,6 @@ export default {
 		handleCurrentRideUpdate: function (querySnapshot) {
 
 			const changes = querySnapshot.docChanges()
-
 			changes.forEach((change, idx, array) => {
 				console.log(change)
 				if (change.type === 'removed') {

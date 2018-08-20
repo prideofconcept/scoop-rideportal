@@ -51,7 +51,11 @@ export default () => ({
 				.get()
 				.then((doc) => {
 					if(doc.exists) {
+						console.log('reportUserIsDriver', true)
 						commit('reportUserIsDriver', true)
+					} else {
+						console.log('reportUserIsDriver', false)
+						commit('reportUserIsDriver', false)
 					}
 				})
 		}
