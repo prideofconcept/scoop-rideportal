@@ -76,7 +76,7 @@ export default new Vuex.Store({
 			console.log('--- grabbing db rides')
 
 			const gurdnPrms = ridesCollection
-				.where('guardian.email', '==', firebaseApp.auth().currentUser.email)
+				.where('guardian_flat', 'array-contains', firebaseApp.auth().currentUser.email)
 				.get()
 				.then(snapshot => {
 					snapshot.forEach(doc => {
@@ -90,7 +90,7 @@ export default new Vuex.Store({
 				})// todo: create catch and respond accordingly in promise.all
 
 			const drvrPrms = ridesCollection
-				.where('driver.email', '==', firebaseApp.auth().currentUser.email)
+				.where('driver_flat', 'array-contains', firebaseApp.auth().currentUser.email)
 				.get()
 				.then(snapshot => {
 					snapshot.forEach(doc => {

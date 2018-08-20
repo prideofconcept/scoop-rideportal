@@ -30,11 +30,11 @@
 					<p class="font-weight-bold"><i class="oi oi-arrow-right-angle"></i>{{isDriver ? currentStep.driverDesc : currentStep.parentDesc}}</p>
 				</div>
 			</div>
-			<div class="col-12" v-show="currentStep.id === 'nav_to_pickup'">
+			<div class="col-12" v-if="currentStep && currentStep.id === 'nav_to_pickup'">
 					<a class="btn btn-small btn-secondary" v-bind:href="pickupHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to pickup</a>
 					<a class="btn btn-small btn-secondary-white" v-bind:href="pickupWaze" target="_blank"><i class="oi oi-location mr-2"></i>waze</a>
 			</div>
-			<div class="col-12" v-show="currentStep.id === 'nav_to_dropoff'">
+			<div class="col-12" v-if="currentStep && currentStep.id === 'nav_to_dropoff'">
 				<p class="m-0">Check Safety and Start Navigation</p>
 				<br/>
 				<a class="btn btn-small btn-secondary" v-bind:href="dropoffHref" target="_blank"><i class="oi oi-location mr-2"></i>nav to dest</a>
@@ -43,7 +43,7 @@
 			<div class="col-12">
 				<br/>
 				<button class="btn btn-light text-center" v-on:click.prevent="onNextStep">
-					<h4><i class="oi oi-chevron-right">&nbsp;</i>{{currentStep.driverButtonTitle ? currentStep.driverButtonTitle : 'Next Step'}}</h4>
+					<h4 v-if="currentStep"><i class="oi oi-chevron-right">&nbsp;</i>{{currentStep.driverButtonTitle ? currentStep.driverButtonTitle : 'Next Step'}}</h4>
 				</button>
 			</div>
 		</section>
@@ -80,7 +80,7 @@ export default {
 	data () {
 		return {
 			stepsOfService: stepsOfService,
-			currentStep: null,
+			currentStep: stepsOfService[0],
 			step_pickup: true,
 			testData: true
 		}
@@ -205,12 +205,12 @@ export default {
 	},
 	mounted () {
 		// this.currentStep = this.currentRide.currentStep ? this.currentRide.currentStep : stepsOfService[0]
-		const queryContraint = this.isDriver ? 'driver.email' : 'guardian.email'
+		const queryContraint = this.isDriver ? 'driver_flat' : 'guardian_flat'
 		console.log('asking for current ride', this.isDriver, queryContraint)
 
 		// todo: make sure we only calculate this, once app has loaded, and in a more global place
 		currentRideCollection
-			.where(queryContraint, '==', firebase.auth().currentUser.email )
+			.where(queryContraint, 'array-contains', firebase.auth().currentUser.email )
 			.onSnapshot(this.handleCurrentRideUpdate.bind(this),
 				(error) => {
 					console.log('Error getting documents: ', error)

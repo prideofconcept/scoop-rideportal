@@ -5,7 +5,7 @@
     </div>
     <gmap-map
 		:center="center"
-		:zoom="8"
+		:zoom="12"
 		v-bind:class="{fullMapView: !isDriver, driverMapView : isDriver}"
 		ref="gmap"
 		:options="{fullscreenControl: false, mapTypeControl: false, streetViewControl: false}"
@@ -30,7 +30,7 @@ export default {
 		return {
 			// default to Montreal to keep it simple
 			// change this to whatever makes sense
-			center: { lat: 29.9511, lng: 90.07 },
+			center: { lat: 33.753746, lng: -84.386330 },
 			places: [],
 			markers: [],
 			currentPlace: null,
