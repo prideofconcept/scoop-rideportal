@@ -86,7 +86,7 @@ export default {
 		}
 	},
 	computed: {
-		//currStep () {return stepsOfService[currentStepIndx]},
+		// currStep () {return stepsOfService[currentStepIndx]},
 		pickupHref () { return `http://maps.google.com/?daddr=${this.currentRide.location}` },
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.destination}` },
 		pickupWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.location)}` },
@@ -100,7 +100,7 @@ export default {
 	methods: {
 		onDeactivateRide: function (e) {
 			// throw up a warning before allowing this action
-			const r = confirm("Deactivate Ride?! - this is not the normal process to end a ride");
+			const r = confirm('Deactivate Ride?! - this is not the normal process to end a ride')
 			if(!r) return
 
 			this.stopCurrentRide()
@@ -126,13 +126,11 @@ export default {
 				console.log(change)
 				if (change.type === 'removed') {
 					this.$store.dispatch('SET_CURRRIDE', null)
-					return
 				}
 				else if (change.type === 'modified') {
 					// todo check if location changed
 					// this.$store.dispatch('SET_CURRRIDE', null)
 					console.log('current event modified')
-					return
 				}
 				else if (change.type === 'added') {
 					const currRide = change.doc.data()
@@ -144,7 +142,7 @@ export default {
 							try{
 								navigator.geolocation.getCurrentPosition(this.onPositionUpdate.bind(this))
 							} catch(e) {
-								console.log('navigator error',e)
+								console.log('navigator error', e)
 							}
 						}
 						else {
@@ -152,7 +150,7 @@ export default {
 						}
 					}
 				}
-			});
+			})
 
 			if(querySnapshot.empty || querySnapshot.docs.length <= 0) {
 				return

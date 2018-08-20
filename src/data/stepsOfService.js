@@ -10,7 +10,7 @@ export const stepsOfService = [
 	},
 	{
 		id: 'nav_to_pickup',
-		index:1,
+		index: 1,
 		label: 'Navigating to pick-up point',
 		driverDesc: 'Click the navigation link, navigate to pickup point',
 		parentDesc: 'Drvier is enroute to pickup point',

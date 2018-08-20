@@ -118,7 +118,7 @@ export default new Vuex.Store({
 				const now = new Date()
 				let lastWeek = new Date()
 				lastWeek.setDate(now.getDate() - 7)
-				console.log('comparing dates', ride.summary, lastWeek, ride.startdate,Date.parse(ride.startdate) > lastWeek)
+				console.log('comparing dates', ride.summary, lastWeek, ride.startdate, Date.parse(ride.startdate) > lastWeek)
 
 				if (Date.parse(ride.startdate) > lastWeek) {
 					return true
