@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column align-items-center">
     <div>
-      <h6>Ride Current Location</h6>
+      <p class="text-secondary m-0">live location</p>
     </div>
     <gmap-map
 		:center="center"
@@ -50,7 +50,7 @@ export default {
 		})
 	},
 	mounted () {
-		console.log('in map pickup, dest ', this.pickup, this.destination)
+		// console.log('in map pickup, dest ', this.pickup, this.destination)
 
 		this.$refs.gmap.$mapPromise.then((gmapObject) => {
 			this.getLatLng()
@@ -106,7 +106,7 @@ export default {
 					if (status === this.google.maps.GeocoderStatus.OK) {
 						const lat = results[0].geometry.location.lat()
 						const lng = results[0].geometry.location.lng()
-						console.log( {lat, lng} )
+						// console.log( {lat, lng} )
 						vm.markers[idx] = {position: {lat, lng}}
 						/* map.setCenter(results[0].geometry.location);
 						var marker = new google.maps.Marker({

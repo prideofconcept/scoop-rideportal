@@ -5,7 +5,7 @@
 		<div class="row">
 			<div class="col-12">
 				<h6 class="text-center">{{currentRide.summary}}</h6>
-				<p>status: {{currentStep.label}} </p>
+				<p v-if="currentStep">status: {{currentStep.label}} </p>
 				<google-map/>
 			</div>
 		</div>
@@ -24,7 +24,7 @@
 		</section>
 
 		<section class="row steps pb-4" v-show="isDriver">
-			<div class="col-12">
+			<div class="col-12" v-if="currentStep">
 				<div class="text-center">
 					<h6 class="text-uppercase"><i class="oi oi-arrow-right-angle"></i>{{currentStep.label}}</h6>
 					<p class="font-weight-bold"><i class="oi oi-arrow-right-angle"></i>{{isDriver ? currentStep.driverDesc : currentStep.parentDesc}}</p>
@@ -123,14 +123,35 @@ export default {
 
 			const changes = querySnapshot.docChanges()
 			changes.forEach((change, idx, array) => {
-				console.log(change)
 				if (change.type === 'removed') {
 					this.$store.dispatch('SET_CURRRIDE', null)
 				}
 				else if (change.type === 'modified') {
-					// todo check if location changed
-					// this.$store.dispatch('SET_CURRRIDE', null)
-					console.log('current event modified')
+
+					const updatedRide = change.doc.data()
+
+					if(!updatedRide || change.doc.id !== this.currentRide.id) {
+						console.error('id changed while on currentRide')
+						// todo: log this
+						return
+					}
+
+					console.log(change)
+					// todo check if location/current_locale changed
+					if( updatedRide.current_locale && updatedRide.current_locale !== this.currentRide.current_locale )
+					{
+						console.log('currentRide:change - locale', (updatedRide.current_locale !== this.currentRide.current_locale), this.currentRide.current_locale, updatedRide.current_locale)
+						this.currentRide.current_locale = updatedRide.current_locale
+						//todo if not local change ignore ?
+					}
+
+					// check if ride status/currentStep changed
+					if( updatedRide.currentStep && updatedRide.currentStep !== this.currentRide.currentStep )
+					{
+						console.log('currentRide:change - currentStep', (updatedRide.currentStep !== this.currentRide.currentStep), this.currentRide.currentStep, updatedRide.currentStep)
+						this.currentRide.currentStep = getStepFromId(updatedRide.currentStep)
+						//todo if not local change update currentEvent in state?
+					}
 				}
 				else if (change.type === 'added') {
 					const currRide = change.doc.data()

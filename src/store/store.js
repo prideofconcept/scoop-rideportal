@@ -45,7 +45,7 @@ export default new Vuex.Store({
 		GET_CALRIDES_FIREBASE ({commit, state}, payload) {
 			commit('setEventsFetching', true)
 			firebaseApp.auth().currentUser.getIdToken().then(function (authToken) {
-				console.log('Sending request to', this, 'with ID token in Authorization header.')
+				// console.log('Sending request to', this, 'with ID token in Authorization header.')
 				const apiUrl = 'https://us-central1-yetigo-3b1de.cloudfunctions.net/httpsGetRetrieveCalendar/'
 				// const apiUrl = 'http://localhost:5000/yetigo-3b1de/us-central1/httpsGetRetrieveCalendar/'
 
@@ -58,7 +58,7 @@ export default new Vuex.Store({
 						'Authorization': 'Bearer ' + authToken
 					}
 				}).then(function (response) {
-					console.log(response.data)
+					console.log(`----recived rides`, response.data)
 					commit('setEvents', response.data.events)
 					commit('setEventsFetching', false)
 
@@ -73,7 +73,7 @@ export default new Vuex.Store({
 			let ridesDriver = []
 			let rides = []
 
-			console.log('grabbing db rides')
+			console.log('--- grabbing db rides')
 
 			const gurdnPrms = ridesCollection
 				.where('guardian.email', '==', firebaseApp.auth().currentUser.email)
@@ -118,7 +118,7 @@ export default new Vuex.Store({
 				const now = new Date()
 				let lastWeek = new Date()
 				lastWeek.setDate(now.getDate() - 7)
-				console.log('comparing dates', ride.summary, lastWeek, ride.startdate, Date.parse(ride.startdate) > lastWeek)
+				// console.log('comparing dates', ride.summary, lastWeek, ride.startdate, Date.parse(ride.startdate) > lastWeek)
 
 				if (Date.parse(ride.startdate) > lastWeek) {
 					return true
