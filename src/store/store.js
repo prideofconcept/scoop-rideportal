@@ -117,10 +117,12 @@ export default new Vuex.Store({
 				// todo : only show rides that are 7 days in the future
 				const now = new Date()
 				let lastWeek = new Date()
+				let nextWeek = new Date()
 				lastWeek.setDate(now.getDate() - 7)
+				nextWeek.setDate(now.getDate() + 7)
 				// console.log('comparing dates', ride.summary, lastWeek, ride.startdate, Date.parse(ride.startdate) > lastWeek)
 
-				if (Date.parse(ride.startdate) > lastWeek) {
+				if (Date.parse(ride.startdate) > lastWeek && Date.parse(ride.startdate) < nextWeek) {
 					return true
 				}
 
