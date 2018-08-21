@@ -54,7 +54,7 @@
 				<p>{{currentRide.description}}</p>
 				<hr/>
 				<div>
-					<button v-on:click.prevent="onDeactivateRide" class="btn btn-error btm-small" :disabled="currentStep.id === 'complete'">Deactivate Ride</button>
+					<button v-if="currentStep" v-on:click.prevent="onDeactivateRide" class="btn btn-error btm-small" :disabled="currentStep.id === 'complete'">Deactivate Ride</button>
 				</div>
 			</div>
 		</div>
@@ -79,8 +79,8 @@ export default {
 	},
 	data () {
 		return {
+			getStepFromId: getStepFromId,
 			stepsOfService: stepsOfService,
-			currentStep: stepsOfService[0],
 			step_pickup: true,
 			testData: true
 		}
@@ -91,7 +91,7 @@ export default {
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.destination}` },
 		pickupWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.location)}` },
 		dropoffWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.destination)}` },
-		//isRideActive (){ return this.currentStep.id === 'complete'},
+		currentStep () { debugger;return this.getStepFromId( this.currentRide.currentStep || 'activated') },
 		...mapState({
 			currentRide: state => state.ride.currentRide,
 			isDriver: state => state.account.isDriver,
@@ -108,21 +108,30 @@ export default {
 		onNextStep: function (e) {
 			if(this.currentStep) {
 				if ( !this.currentStep.isLastStep) {
-					this.currentStep = this.stepsOfService[this.currentStep.index + 1]
-					this.$store.dispatch('SET_CURRENT_STEP', this.currentStep.id)
+					const nextStep = this.stepsOfService[this.currentStep.index + 1]
+					this.$store.dispatch('SET_CURRENT_STEP', nextStep.id)
 				} else if (this.currentStep.isLastStep || this.currentStep.id === 'complete') {
 					this.stopCurrentRide()
 				}
 			}
 		},
 		stopCurrentRide: function () {
-			this.currentStep = null
+			// this.currentStep = null
 			this.$store.dispatch('STOP_CURRENT_RIDE')
 		},
 		handleCurrentRideUpdate: function (querySnapshot) {
+			if(querySnapshot.empty || querySnapshot.docs.length <= 0) {
+				return
+			}
+
 
 			const changes = querySnapshot.docChanges()
 			changes.forEach((change, idx, array) => {
+				console.log('change change',change, change.doc.metadata.hasPendingWrites)
+				if( change.doc.metadata.hasPendingWrites ) {
+					return
+				}
+
 				if (change.type === 'removed') {
 					this.$store.dispatch('SET_CURRRIDE', null)
 				}
@@ -136,23 +145,17 @@ export default {
 						return
 					}
 
-
-					console.log('change change',change, change.doc.metadata.hasPendingWrites)
-					if( change.doc.metadata.hasPendingWrites ) {
-						return
-					}
+					// this is a legitimate change - lets work with it
 
 					// todo check if location/current_locale changed
 					if( updatedRide.current_locale
-						&& (updatedRide.current_locale.lat !== this.currentRide.current_locale.lat
+						&& (!this.currentRide.current_locale
+							|| updatedRide.current_locale.lat !== this.currentRide.current_locale.lat
 							||  updatedRide.current_locale.lng !== this.currentRide.current_locale.lng) )
 					{
-						console.log('currentRide:change - locale',
-							(updatedRide.current_locale.lat !== this.currentRide.current_locale.lat ||  updatedRide.current_locale.lng !== this.currentRide.current_locale.lng),
-							this.currentRide.current_locale,
-							updatedRide.current_locale
-						)
-						this.currentRide.current_locale = updatedRide.current_locale
+						console.log('currentRide:change - locale')
+						//this.currentRide.current_locale = updatedRide.current_locale
+						this.$store.dispatch('CURRRIDE_UPDATED', {current_locale: updatedRide.current_locale})
 						//todo if not local change ignore ?
 					}
 
@@ -160,16 +163,18 @@ export default {
 					if( updatedRide.currentStep && updatedRide.currentStep !== this.currentRide.currentStep )
 					{
 						console.log('currentRide:change - currentStep', (updatedRide.currentStep !== this.currentRide.currentStep), this.currentRide.currentStep, updatedRide.currentStep)
-						if(!this.isDriver) {
+						/*if(!this.isDriver) {
 							this.currentRide.currentStep = getStepFromId(updatedRide.currentStep)
-						}
+						}*/
+						this.$store.dispatch('CURRRIDE_UPDATED', {currentStep: updatedRide.currentStep})
+
 						//todo if not local change update currentEvent in state?
 					}
 				}
 				else if (change.type === 'added') {
 					const currRide = change.doc.data()
 					console.log('change - currRide, self, this',currRide)
-					this.currentStep = currRide.currentStep ? getStepFromId(currRide.currentStep) : this.stepsOfService[0]
+					// this.currentStep = currRide.currentStep ? getStepFromId(currRide.currentStep) : this.stepsOfService[0]
 					this.$store.dispatch('SET_CURRRIDE', currRide)
 					if( this.isDriver ) {
 						if(navigator.geolocation) {
@@ -186,9 +191,7 @@ export default {
 				}
 			})
 
-			if(querySnapshot.empty || querySnapshot.docs.length <= 0) {
-				return
-			}
+
 
 		},
 		onPositionUpdate: function (position) {

@@ -31,6 +31,9 @@ export default () => ({
 				state.onRide = false
 			}
 		},
+		reportRideUpdate (state, payload) {
+			state.currentRide = Object.assign(state.currentRide, payload)
+		}
 		/* setCurrentRideLocal (state, payload) {
 			console.log('updating location', payload )
 			state.currentRideLocale = payload
@@ -64,7 +67,7 @@ export default () => ({
 					url: ride.url,
 					scheduled_time: ride.startdate,
 					id: ride.id,
-					status: 'started',
+					status: 'activated',
 					start_time: date
 				})
 				.then(() => {
@@ -80,19 +83,19 @@ export default () => ({
 				})
 		},
 		SET_CURRENT_STEP ({ commit, state }, payload) {
-			const currentRideId = payload
+			const currentRideStepId = payload
 			const currRide = state.currentRide
-			console.log('updating ride to step ', currentRideId)
+			console.log('updating ride to step ', currentRideStepId)
 
 			rideLogCollection
-				.doc(ride.id + ' :: ' + ride.currentStep)
+				.doc(currRide.id + ' :: ' + currRide.currentStep)
 				.set({
-					url: ride.url,
-					time: new Date(),
-					id: ride.id,
-					status: ride.currentStep,
-					start_time: date,
-					current_locale: ride.current_locale
+					url: currRide.url || null,
+					timestamp: new Date(),
+					id: currRide.id,
+					summary: currRide.summary || null,
+					status: currentRideStepId || null,
+					current_locale: currRide.current_locale || null
 				})
 				.then(() => {
 					commit('reportSaveRideLogSuccess', true)
@@ -100,11 +103,11 @@ export default () => ({
 
 			currentRideCollection
 				.doc(`${currRide.id}`)
-				.set({currentStep: currentRideId},
+				.set({currentStep: currentRideStepId},
 					{merge: true})
 				.then(() => {
 					// todo do we need to commit anything here?
-					console.log('step saved in currentRide')
+					console.log('step saved in currentRide -> currentStepId:',currentRideStepId)
 				})
 		},
 		STOP_CURRENT_RIDE ({ commit, state }) {
@@ -131,6 +134,9 @@ export default () => ({
 			currentRideCollection
 				.doc(`${ride.id}`)
 				.delete()
-		}
+		},
+		CURRRIDE_UPDATED ({ commit, state }, payload) {
+			commit('reportRideUpdate', payload)
+		},
 	}
 })
