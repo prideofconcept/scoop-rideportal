@@ -3,7 +3,7 @@
 
 	<div class="row">
 		<div class="col-12">
-			<h6 class="headline">Scoop Ride Portal v0.51</h6>
+			<h6 class="headline">Scoop Ride Portal v0.53</h6>
 			<h6>{{ msg }} <span v-on:click="logoutUser" class="oi oi-account-logout">&nbsp;</span></h6>
 		</div>
 	</div>

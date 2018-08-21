@@ -82,7 +82,8 @@ export default {
 			getStepFromId: getStepFromId,
 			stepsOfService: stepsOfService,
 			step_pickup: true,
-			testData: true
+			testData: true,
+			gpsInterval: null,
 		}
 	},
 	computed: {
@@ -91,11 +92,29 @@ export default {
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.destination}` },
 		pickupWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.location)}` },
 		dropoffWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.destination)}` },
-		currentStep () { debugger;return this.getStepFromId( this.currentRide.currentStep || 'activated') },
+		currentStep () {
+			return this.getStepFromId( this.currentRide.currentStep || 'activated')
+		},
 		...mapState({
 			currentRide: state => state.ride.currentRide,
 			isDriver: state => state.account.isDriver,
 		})
+	},
+	watch: {
+		currentStep: function(newStep, oldStep) {
+			console.log('watch:step has changed to', newStep)
+			if(this.isDriver && newStep && newStep.isTrackGPS) {
+				this.gpsInterval = setInterval(this.getDeviceCurrentGPSLocation, 5000);
+			} else {
+				clearInterval(this.gpsInterval)
+			}
+		},
+		currentRide: function(newCurrentRide, oldCurrentRide) {
+			console.log('watch:currentRide has changed')
+			/*if( newCurrentRide.currentStep !== oldCurrentRide.currentStep ) {
+				debugger;
+			}*/
+		}
 	},
 	methods: {
 		onDeactivateRide: function (e) {
@@ -179,7 +198,7 @@ export default {
 					if( this.isDriver ) {
 						if(navigator.geolocation) {
 							try{
-								navigator.geolocation.getCurrentPosition(this.onPositionUpdate.bind(this))
+								this.getDeviceCurrentGPSLocation();
 							} catch(e) {
 								console.log('navigator error', e)
 							}
@@ -194,6 +213,9 @@ export default {
 
 
 		},
+		getDeviceCurrentGPSLocation: function(){
+			navigator.geolocation.getCurrentPosition(this.onPositionUpdate)
+		},
 		onPositionUpdate: function (position) {
 
 			if(position.coords) {
@@ -204,7 +226,7 @@ export default {
 					this.$store.dispatch('SET_CURRRIDE_LOCATION', { lat, lng })
 				}
 			}
-		}
+		},
 	},
 	mounted () {
 		// this.currentStep = this.currentRide.currentStep ? this.currentRide.currentStep : stepsOfService[0]
@@ -218,6 +240,9 @@ export default {
 				(error) => {
 					console.log('Error getting documents: ', error)
 				})
+
+	},
+	updated () {
 
 	}
 }

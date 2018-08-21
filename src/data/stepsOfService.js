@@ -7,6 +7,7 @@ export const stepsOfService = [
 		driverButtonTitle: 'Start Ride',
 		parentDesc: 'Driver is ready, Driver will navigate to pickup shortly',
 		isServiceActive: false,
+		isTrackGPS: false,
 	},
 	{
 		id: 'nav_to_pickup',
@@ -15,6 +16,7 @@ export const stepsOfService = [
 		driverDesc: 'Click the navigation link, navigate to pickup point',
 		parentDesc: 'Drvier is enroute to pickup point',
 		isServiceActive: false,
+		isTrackGPS: true,
 	},
 	{
 		id: 'pickup',
@@ -23,6 +25,7 @@ export const stepsOfService = [
 		driverDesc: 'Pickup child, leave vehicle if necessary',
 		parentDesc: 'Driver is ready to pickup child',
 		isServiceActive: false,
+		isTrackGPS: true,
 	},
 	{
 		id: 'nav_to_dropoff',
@@ -31,6 +34,7 @@ export const stepsOfService = [
 		driverDesc: 'Secure child, navigate to drop-off location',
 		parentDesc: 'Driver is navigating to destination',
 		isServiceActive: true,
+		isTrackGPS: true,
 	},
 	{
 		id: 'dropoff',
@@ -39,6 +43,7 @@ export const stepsOfService = [
 		driverDesc: 'Deliver child safely to drop-off point',
 		parentDesc: 'Driver has arrived, delivering child to drop-off location',
 		isServiceActive: true,
+		isTrackGPS: true,
 	},
 	{
 		id: 'complete',
@@ -48,7 +53,8 @@ export const stepsOfService = [
 		driverButtonTitle: 'Complete Ride',
 		parentDesc: 'Ride has ended',
 		isServiceActive: false,
-		isLastStep: true
+		isTrackGPS: false,
+		isLastStep: true,
 	},
 ]
 

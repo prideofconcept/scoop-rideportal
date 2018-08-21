@@ -86,6 +86,7 @@ export default () => ({
 			const currentRideStepId = payload
 			const currRide = state.currentRide
 			console.log('updating ride to step ', currentRideStepId)
+			commit('reportRideUpdate', {currentStep: currentRideStepId})
 
 			rideLogCollection
 				.doc(currRide.id + ' :: ' + currRide.currentStep)

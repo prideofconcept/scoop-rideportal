@@ -11,12 +11,14 @@
 		:options="{fullscreenControl: false, mapTypeControl: false, streetViewControl: false}"
     >
       <gmap-marker
-		:key="index"
-		v-for="(m, index) in markers"
-		:position="m.position"
-		@click="center=m.position"
+	      :key="index"
+	      v-for="(m, index) in markers"
+	      :position="m.position"
+	      @click="center=m.position"
       ></gmap-marker>
     </gmap-map>
+	  <!--icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"-->
+	  <!-- <gmap-circle :center="center" :radius="200" :options="currentLocaleCircleOption"> </gmap-circle> -->
   </div>
 </template>
 
@@ -30,16 +32,23 @@ export default {
 		return {
 			// default to Montreal to keep it simple
 			// change this to whatever makes sense
-			center: { lat: 33.753746, lng: -84.386330 },
 			places: [],
 			markers: [],
 			currentPlace: null,
+			currentLocaleCircleOption: {
+				strokeColor: '#135669',
+				strokeOpacity: 1,
+				strokeWeight: 2,
+				fillColor: '#339989',
+				fillOpacity: 0.8,
+			}
 		}
 	},
 	computed: {
 		google: gmapApi,
 		pickup () { return this.currentRide.location },
 		destination () { return this.currentRide.destination },
+		center() {return this.currentRide.current_locale? this.currentRide.current_locale : { lat: 33.753746, lng: -84.386330 }},
 		/* markers () { return [
 			{ latlng: { lat: 33.753746, lng: -84.386330 } },
 			{ latlang: { lat: 33.8463, lng: -84.362 } },
@@ -49,6 +58,11 @@ export default {
 			isDriver: state => state.account.isDriver,
 		})
 	},
+	watch: {
+		markers: function( newMarkers){
+			console.log('watch:markers', newMarkers)
+		}
+	},
 	mounted () {
 		// console.log('in map pickup, dest ', this.pickup, this.destination)
 
@@ -56,9 +70,6 @@ export default {
 			this.getLatLng()
 		})
 
-		if(this.isDriver) {
-			this.geolocate()
-		}
 	},
 	updated () {
 		console.log('goodle map comp updated', this.markers)
@@ -81,15 +92,6 @@ export default {
 				this.currentPlace = null;
 			}
 		}, */
-		geolocate: function () {
-			// todo : do this for ride current location
-			navigator.geolocation.getCurrentPosition(position => {
-				this.center = {
-					lat: position.coords.latitude,
-					lng: position.coords.longitude
-				}
-			})
-		},
 		getLatLng: function () {
 			if ( (!this.pickup && !this.destination) || !this.google )
 				return null
@@ -107,7 +109,7 @@ export default {
 						const lat = results[0].geometry.location.lat()
 						const lng = results[0].geometry.location.lng()
 						// console.log( {lat, lng} )
-						vm.markers[idx] = {position: {lat, lng}}
+						vm.markers[idx] = { position: {lat, lng} }
 						/* map.setCenter(results[0].geometry.location);
 						var marker = new google.maps.Marker({
 							map: map,
