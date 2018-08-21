@@ -48,14 +48,25 @@ export const stepsOfService = [
 	{
 		id: 'complete',
 		index: 5,
-		label: 'Ride finalized',
-		driverDesc: 'Ride has ended',
+		label: 'Ride ending...',
+		driverDesc: 'Ride complete',
 		driverButtonTitle: 'Complete Ride',
 		parentDesc: 'Ride has ended',
 		isServiceActive: false,
 		isTrackGPS: false,
 		isLastStep: true,
 	},
+/*	{
+		id: 'final',
+		index: 6,
+		label: 'Ride finalized',
+		driverDesc: 'Ride has ended',
+		driverButtonTitle: 'Stop Ride',
+		parentDesc: 'Ride is completed',
+		isServiceActive: false,
+		isTrackGPS: false,
+		isLastStep: true,
+	},*/
 ]
 
 export const getStepFromId = (id) => ( stepsOfService.filter((step) => (step.id === id))[0] )

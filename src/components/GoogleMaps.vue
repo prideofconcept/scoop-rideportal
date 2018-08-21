@@ -115,7 +115,6 @@ export default {
 					if (status === vm.google.maps.GeocoderStatus.OK) {
 						const lat = results[0].geometry.location.lat()
 						const lng = results[0].geometry.location.lng()
-						debugger;
 						// console.log( {lat, lng} )
 						vm.markers[idx] = { position: {lat, lng} }
 						/* map.setCenter(results[0].geometry.location);

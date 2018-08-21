@@ -27,6 +27,7 @@
 			<div class="col-12" v-if="currentStep">
 				<div class="text-center">
 					<h6 class="text-uppercase"><i class="oi oi-arrow-right-angle"></i>{{currentStep.label}}</h6>
+					<p class="text-secondary m-0">{{currentStep.id}}</p>
 					<p class="font-weight-bold"><i class="oi oi-arrow-right-angle"></i>{{isDriver ? currentStep.driverDesc : currentStep.parentDesc}}</p>
 				</div>
 			</div>
@@ -54,7 +55,7 @@
 				<p>{{currentRide.description}}</p>
 				<hr/>
 				<div>
-					<button v-if="currentStep" v-on:click.prevent="onDeactivateRide" class="btn btn-error btm-small" :disabled="currentStep.id === 'complete'">Deactivate Ride</button>
+					<button v-if="currentStep" v-on:click.prevent="onDeactivateRide" class="btn btn-error btm-small" :disabled="currentStep.isLastStep">Deactivate Ride</button>
 				</div>
 			</div>
 		</div>
@@ -84,6 +85,7 @@ export default {
 			step_pickup: true,
 			testData: true,
 			gpsInterval: null,
+			currentStep: getStepFromId( this.currentRide && this.currentRide.currentStep ? this.currentRide.currentStep : 'activated'),
 		}
 	},
 	computed: {
@@ -92,9 +94,7 @@ export default {
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.destination}` },
 		pickupWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.location)}` },
 		dropoffWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.destination)}` },
-		currentStep () {
-			return this.getStepFromId( this.currentRide ? this.currentRide.currentStep : 'activated')
-		},
+		//currentStepID () {return state.ride.currentRide.currentStep},
 		...mapState({
 			currentRide: state => state.ride.currentRide,
 			isDriver: state => state.account.isDriver,
@@ -104,17 +104,30 @@ export default {
 		currentStep: function(newStep, oldStep) {
 			console.log('watch:step has changed to', newStep)
 			if(this.isDriver && newStep && newStep.isTrackGPS) {
-				this.gpsInterval = setInterval(this.getDeviceCurrentGPSLocation, 5000);
+				if(!this.gpsInterval) {
+					this.gpsInterval = setInterval(this.getDeviceCurrentGPSLocation, 30000);
+				}
 			} else {
 				clearInterval(this.gpsInterval)
 			}
 		},
-		currentRide: function(newCurrentRide, oldCurrentRide) {
-			console.log('watch:currentRide has changed')
-			/*if( newCurrentRide.currentStep !== oldCurrentRide.currentStep ) {
+		currentRide: {
+			handler(newCurrentRide, oldCurrentRide) {
+				console.log('watch:currentRide has changed',newCurrentRide.currentStep, oldCurrentRide ? oldCurrentRide.currentStep : '')
 				debugger;
-			}*/
-		}
+				if( !oldCurrentRide && newCurrentRide.currentStep || newCurrentRide.currentStep !== this.currentStep.id ) {
+					debugger;
+					console.log('watch:currentStepID has changed')
+					this.currentStep = this.getStepFromId( newCurrentRide.currentStep )
+				}
+			},
+			deep: true},
+/*		currentStepID: function(newStep, oldStep) {
+			debugger;
+			console.log('watch:currentStepID has changed')
+			this.getStepFromId( newStep !== oldStep)
+			this.currentStep = this.getStepFromId(newStep)
+		}*/
 	},
 	methods: {
 		onDeactivateRide: function (e) {
@@ -125,13 +138,11 @@ export default {
 			this.stopCurrentRide()
 		},
 		onNextStep: function (e) {
-			if(this.currentStep) {
-				if ( !this.currentStep.isLastStep) {
-					const nextStep = this.stepsOfService[this.currentStep.index + 1]
-					this.$store.dispatch('SET_CURRENT_STEP', nextStep.id)
-				} else if (this.currentStep.isLastStep || this.currentStep.id === 'complete') {
-					this.stopCurrentRide()
-				}
+			if ( !this.currentStep.isLastStep) {
+				const nextStep = this.stepsOfService[this.currentStep.index + 1]
+				this.$store.dispatch('SET_CURRENT_STEP', nextStep.id)
+			} else if (this.currentStep.isLastStep) {
+				this.stopCurrentRide()
 			}
 		},
 		stopCurrentRide: function () {
@@ -193,7 +204,6 @@ export default {
 				else if (change.type === 'added') {
 					const currRide = change.doc.data()
 					console.log('change - currRide, self, this',currRide)
-					// this.currentStep = currRide.currentStep ? getStepFromId(currRide.currentStep) : this.stepsOfService[0]
 					this.$store.dispatch('SET_CURRRIDE', currRide)
 					if( this.isDriver ) {
 						if(navigator.geolocation) {
@@ -222,14 +232,13 @@ export default {
 				var lat = position.coords.latitude
 				var lng = position.coords.longitude
 				if (this.$store) {
-					console.log('this.$store', this.$store)
+					console.log('updating pos')
 					this.$store.dispatch('SET_CURRRIDE_LOCATION', { lat, lng })
 				}
 			}
 		},
 	},
 	mounted () {
-		// this.currentStep = this.currentRide.currentStep ? this.currentRide.currentStep : stepsOfService[0]
 		const queryContraint = this.isDriver ? 'driver_flat' : 'guardian_flat'
 		console.log('asking for current ride', this.isDriver, queryContraint)
 

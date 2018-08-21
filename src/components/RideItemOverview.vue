@@ -8,7 +8,7 @@
 
 		<div class="col-12 white--text" v-show="(isSelecteder && isDriver && !currentRide)">
 			<i class="oi oi-media-play"></i>
-			<button v-on:click.prevent="onStartRide" v-if="!isCurrentRide">Select Ride</button>
+			<button v-on:click.prevent="onStartRide" v-if="!isCurrentRide">Activate Ride</button>
 		</div>
 		<div class="col-12 white--text" v-show="(isSelecteder && isDriver && currentRide)">
 			<p class="error">please end or deactivate current ride, before changing ride</p>

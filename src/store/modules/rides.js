@@ -32,7 +32,9 @@ export default () => ({
 			}
 		},
 		reportRideUpdate (state, payload) {
+			debugger;
 			state.currentRide = Object.assign(state.currentRide, payload)
+
 		}
 		/* setCurrentRideLocal (state, payload) {
 			console.log('updating location', payload )
@@ -46,6 +48,8 @@ export default () => ({
 	},
 	actions: {
 		SET_CURRRIDE_LOCATION ({commit, state}, payload) {
+			if(!state.currentRide)
+				return
 			currentRideCollection.doc(state.currentRide.id)
 				.set({
 					current_locale: payload
