@@ -16,6 +16,7 @@
 	      :position="m.position"
 	      @click="center=m.position"
       ></gmap-marker>
+        <gmap-circle :center="center" :radius="200" :options="currentLocaleCircleOption"> </gmap-circle>
     </gmap-map>
 	  <!--icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"-->
 	  <!-- <gmap-circle :center="center" :radius="200" :options="currentLocaleCircleOption"> </gmap-circle> -->
@@ -59,8 +60,14 @@ export default {
 		})
 	},
 	watch: {
-		markers: function( newMarkers){
+		markers: function( newMarkers, oldMarkers) {
 			console.log('watch:markers', newMarkers)
+		},
+		pickup: function() {
+			this.getLatLng()
+		},
+		destination: function() {
+			this.getLatLng()
 		}
 	},
 	mounted () {
@@ -105,9 +112,10 @@ export default {
 					return
 
 				geocoder.geocode( { 'address': address }, function (results, status) {
-					if (status === this.google.maps.GeocoderStatus.OK) {
+					if (status === vm.google.maps.GeocoderStatus.OK) {
 						const lat = results[0].geometry.location.lat()
 						const lng = results[0].geometry.location.lng()
+						debugger;
 						// console.log( {lat, lng} )
 						vm.markers[idx] = { position: {lat, lng} }
 						/* map.setCenter(results[0].geometry.location);

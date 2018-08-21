@@ -93,7 +93,7 @@ export default {
 		pickupWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.location)}` },
 		dropoffWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.destination)}` },
 		currentStep () {
-			return this.getStepFromId( this.currentRide.currentStep || 'activated')
+			return this.getStepFromId( this.currentRide ? this.currentRide.currentStep : 'activated')
 		},
 		...mapState({
 			currentRide: state => state.ride.currentRide,
