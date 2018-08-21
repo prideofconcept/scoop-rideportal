@@ -56,6 +56,7 @@
 				<hr/>
 				<div>
 					<button v-if="currentStep" v-on:click.prevent="onDeactivateRide" class="btn btn-error btm-small" :disabled="currentStep.isLastStep">Deactivate Ride</button>
+					<button v-if="currentStep.isLastStep" v-on:click.prevent="onRestartRide" class="btn btn-error btm-small" :disabled="!currentStep.isLastStep">Restart Ride</button>
 				</div>
 			</div>
 		</div>
@@ -113,21 +114,13 @@ export default {
 		},
 		currentRide: {
 			handler(newCurrentRide, oldCurrentRide) {
-				console.log('watch:currentRide has changed',newCurrentRide.currentStep, oldCurrentRide ? oldCurrentRide.currentStep : '')
-				debugger;
-				if( !oldCurrentRide && newCurrentRide.currentStep || newCurrentRide.currentStep !== this.currentStep.id ) {
-					debugger;
+				console.log('watch:currentRide has changed',newCurrentRide.currentStep, oldCurrentRide ? oldCurrentRide.currentStep : null)
+				if( !oldCurrentRide && newCurrentRide.currentStep || newCurrentRide.currentStep && newCurrentRide.currentStep !== this.currentStep.id ) {
 					console.log('watch:currentStepID has changed')
 					this.currentStep = this.getStepFromId( newCurrentRide.currentStep )
 				}
 			},
 			deep: true},
-/*		currentStepID: function(newStep, oldStep) {
-			debugger;
-			console.log('watch:currentStepID has changed')
-			this.getStepFromId( newStep !== oldStep)
-			this.currentStep = this.getStepFromId(newStep)
-		}*/
 	},
 	methods: {
 		onDeactivateRide: function (e) {
@@ -136,6 +129,13 @@ export default {
 			if(!r) return
 
 			this.stopCurrentRide()
+		},
+		onRestartRide: function (e) {
+			// throw up a warning before allowing this action
+			const r = confirm('Restart Ride?! - this is not the normal process to end a ride')
+			if(!r) return
+
+			this.$store.dispatch('SET_CURRENT_STEP', this.stepsOfService[0].id)
 		},
 		onNextStep: function (e) {
 			if ( !this.currentStep.isLastStep) {
@@ -157,12 +157,13 @@ export default {
 
 			const changes = querySnapshot.docChanges()
 			changes.forEach((change, idx, array) => {
-				console.log('change change',change, change.doc.metadata.hasPendingWrites)
 				if( change.doc.metadata.hasPendingWrites ) {
 					return
 				}
+				console.log('change change', change.doc.metadata.hasPendingWrites)
 
 				if (change.type === 'removed') {
+					console.log('removed')
 					this.$store.dispatch('SET_CURRRIDE', null)
 				}
 				else if (change.type === 'modified') {

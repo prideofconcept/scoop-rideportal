@@ -34,7 +34,6 @@ export default () => ({
 		reportRideUpdate (state, payload) {
 			debugger;
 			state.currentRide = Object.assign(state.currentRide, payload)
-
 		}
 		/* setCurrentRideLocal (state, payload) {
 			console.log('updating location', payload )
