@@ -99,7 +99,8 @@ export default () => ({
 					id: currRide.id,
 					summary: currRide.summary || null,
 					status: currentRideStepId || null,
-					current_locale: currRide.current_locale || null
+					current_locale: currRide.current_locale || null,
+					guardian: currRide.guardian || null,
 				})
 				.then(() => {
 					commit('reportSaveRideLogSuccess', true)
