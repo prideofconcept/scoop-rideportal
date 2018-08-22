@@ -98,7 +98,6 @@ export default {
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.destination}` },
 		pickupWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.location)}` },
 		dropoffWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.destination)}` },
-		// currentStepID () {return state.ride.currentRide.currentStep},
 		...mapState({
 			currentRide: state => state.ride.currentRide,
 			isDriver: state => state.account.isDriver,

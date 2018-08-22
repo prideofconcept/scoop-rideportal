@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Firestore from '@/firebase/firestore'
 
 const rideLogCollection = Firestore.collection('ride_log') // todo: should the collection come from an env var
@@ -33,7 +34,11 @@ export default () => ({
 		},
 		reportRideUpdate (state, payload) {
 			state.currentRide = Object.assign(state.currentRide, payload)
-		}
+			// Vue.set(state.currentRide, payload.keys[0], payload[payload.keys[0]])
+		},
+		setCurrentStep (state, payload) {
+			Vue.set(state.currentRide, 'currentStep', payload)
+		},
 		/* setCurrentRideLocal (state, payload) {
 			console.log('updating location', payload )
 			state.currentRideLocale = payload
@@ -89,7 +94,8 @@ export default () => ({
 			const currentRideStepId = payload
 			const currRide = state.currentRide
 			console.log('updating ride to step ', currentRideStepId)
-			commit('reportRideUpdate', {currentStep: currentRideStepId})
+			// commit('reportRideUpdate', {currentStep: currentRideStepId})
+			commit('setCurrentStep', currentRideStepId)
 
 			rideLogCollection
 				.doc(currRide.id + ' :: ' + currRide.currentStep)
