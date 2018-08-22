@@ -24,6 +24,9 @@
 		</section>
 
 		<section class="row steps pb-4" v-show="isDriver">
+
+			<hr class="divider"/>
+
 			<div class="col-12" v-if="currentStep">
 				<div class="text-center">
 					<h6 class="text-uppercase"><i class="oi oi-arrow-right-angle"></i>{{currentStep.label}}</h6>
@@ -68,7 +71,7 @@
 import * as firebase from 'firebase'
 import Firestore from '@/firebase/firestore'
 import GoogleMap from '@/components/GoogleMaps'
-import { stepsOfService, getStepFromId} from '@/data/stepsOfService'
+import { stepsOfService, getStepFromId } from '@/data/stepsOfService'
 import { mapState } from 'vuex'
 
 const currentRideCollection = Firestore.collection('ride_current') // todo: should the collections be exported from the firebase module
@@ -95,27 +98,28 @@ export default {
 		dropoffHref () { return `http://maps.google.com/?daddr=${this.currentRide.destination}` },
 		pickupWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.location)}` },
 		dropoffWaze () { return `https://waze.com/ul?q=${encodeURIComponent(this.currentRide.destination)}` },
-		//currentStepID () {return state.ride.currentRide.currentStep},
+		// currentStepID () {return state.ride.currentRide.currentStep},
 		...mapState({
 			currentRide: state => state.ride.currentRide,
 			isDriver: state => state.account.isDriver,
 		})
 	},
 	watch: {
-		currentStep: function(newStep, oldStep) {
+		currentStep: function (newStep, oldStep) {
 			console.log('watch:step has changed to', newStep)
 			if(this.isDriver && newStep && newStep.isTrackGPS) {
 				if(!this.gpsInterval) {
-					this.gpsInterval = setInterval(this.getDeviceCurrentGPSLocation, 30000);
+					this.gpsInterval = setInterval(this.getDeviceCurrentGPSLocation, 30000)
 				}
 			} else {
 				clearInterval(this.gpsInterval)
 			}
 		},
 		currentRide: {
-			handler(newCurrentRide, oldCurrentRide) {
-				console.log('watch:currentRide has changed',newCurrentRide.currentStep, oldCurrentRide ? oldCurrentRide.currentStep : null)
-				if( !oldCurrentRide && newCurrentRide.currentStep || newCurrentRide.currentStep && newCurrentRide.currentStep !== this.currentStep.id ) {
+			handler (newCurrentRide, oldCurrentRide) {
+				console.log('watch:currentRide has changed', newCurrentRide.currentStep, oldCurrentRide ? oldCurrentRide.currentStep : null)
+				if( (!oldCurrentRide && newCurrentRide.currentStep) ||
+					(newCurrentRide.currentStep && newCurrentRide.currentStep !== this.currentStep.id) ) {
 					console.log('watch:currentStepID has changed')
 					this.currentStep = this.getStepFromId( newCurrentRide.currentStep )
 				}
@@ -154,7 +158,6 @@ export default {
 				return
 			}
 
-
 			const changes = querySnapshot.docChanges()
 			changes.forEach((change, idx, array) => {
 				if( change.doc.metadata.hasPendingWrites ) {
@@ -179,37 +182,35 @@ export default {
 					// this is a legitimate change - lets work with it
 
 					// todo check if location/current_locale changed
-					if( updatedRide.current_locale
-						&& (!this.currentRide.current_locale
-							|| updatedRide.current_locale.lat !== this.currentRide.current_locale.lat
-							||  updatedRide.current_locale.lng !== this.currentRide.current_locale.lng) )
-					{
+					if( updatedRide.current_locale &&
+						(!this.currentRide.current_locale ||
+							updatedRide.current_locale.lat !== this.currentRide.current_locale.lat ||
+							updatedRide.current_locale.lng !== this.currentRide.current_locale.lng) ) {
 						console.log('currentRide:change - locale')
-						//this.currentRide.current_locale = updatedRide.current_locale
+						// this.currentRide.current_locale = updatedRide.current_locale
 						this.$store.dispatch('CURRRIDE_UPDATED', {current_locale: updatedRide.current_locale})
-						//todo if not local change ignore ?
+						// todo if not local change ignore ?
 					}
 
 					// check if ride status/currentStep changed
-					if( updatedRide.currentStep && updatedRide.currentStep !== this.currentRide.currentStep )
-					{
+					if( updatedRide.currentStep && updatedRide.currentStep !== this.currentRide.currentStep ) {
 						console.log('currentRide:change - currentStep', (updatedRide.currentStep !== this.currentRide.currentStep), this.currentRide.currentStep, updatedRide.currentStep)
-						/*if(!this.isDriver) {
+						/* if(!this.isDriver) {
 							this.currentRide.currentStep = getStepFromId(updatedRide.currentStep)
-						}*/
+						} */
 						this.$store.dispatch('CURRRIDE_UPDATED', {currentStep: updatedRide.currentStep})
 
-						//todo if not local change update currentEvent in state?
+						// todo if not local change update currentEvent in state?
 					}
 				}
 				else if (change.type === 'added') {
 					const currRide = change.doc.data()
-					console.log('change - currRide, self, this',currRide)
+					console.log('change - currRide, self, this', currRide)
 					this.$store.dispatch('SET_CURRRIDE', currRide)
 					if( this.isDriver ) {
 						if(navigator.geolocation) {
 							try{
-								this.getDeviceCurrentGPSLocation();
+								this.getDeviceCurrentGPSLocation()
 							} catch(e) {
 								console.log('navigator error', e)
 							}
@@ -221,10 +222,8 @@ export default {
 				}
 			})
 
-
-
 		},
-		getDeviceCurrentGPSLocation: function(){
+		getDeviceCurrentGPSLocation: function () {
 			navigator.geolocation.getCurrentPosition(this.onPositionUpdate)
 		},
 		onPositionUpdate: function (position) {
@@ -277,11 +276,17 @@ export default {
 		top: 4px;
 		opacity: .6;
 	}
+	hr.divider {
+		border: 3px #000 solid;
+		width: 100%;
+		opacity: 0.1;
+		margin-top: 0;
+	}
 	.nav-display{
 		margin: 8px 0;
 	}
 	.nav-desc {
-		min-height: 80px;
+		/*min-height: 80px;*/
 	}
 	.nav-desc span{
 		font-size: 12px;

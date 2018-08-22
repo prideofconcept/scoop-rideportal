@@ -32,7 +32,6 @@ export default () => ({
 			}
 		},
 		reportRideUpdate (state, payload) {
-			debugger;
 			state.currentRide = Object.assign(state.currentRide, payload)
 		}
 		/* setCurrentRideLocal (state, payload) {
@@ -47,8 +46,9 @@ export default () => ({
 	},
 	actions: {
 		SET_CURRRIDE_LOCATION ({commit, state}, payload) {
-			if(!state.currentRide)
+			if (!state.currentRide) {
 				return
+			}
 			currentRideCollection.doc(state.currentRide.id)
 				.set({
 					current_locale: payload
@@ -111,7 +111,7 @@ export default () => ({
 					{merge: true})
 				.then(() => {
 					// todo do we need to commit anything here?
-					console.log('step saved in currentRide -> currentStepId:',currentRideStepId)
+					console.log('step saved in currentRide -> currentStepId:', currentRideStepId)
 				})
 		},
 		STOP_CURRENT_RIDE ({ commit, state }) {

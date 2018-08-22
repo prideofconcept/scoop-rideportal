@@ -11,15 +11,15 @@
 		:options="{fullscreenControl: false, mapTypeControl: false, streetViewControl: false}"
     >
       <gmap-marker
-	      :key="index"
-	      v-for="(m, index) in markers"
-	      :position="m.position"
-	      @click="center=m.position"
+		:key="index"
+		v-for="(m, index) in markers"
+		:position="m.position"
+		@click="center=m.position"
       ></gmap-marker>
-        <gmap-circle :center="center" :radius="200" :options="currentLocaleCircleOption"> </gmap-circle>
+		<gmap-circle :center="center" :radius="200" :options="currentLocaleCircleOption"> </gmap-circle>
     </gmap-map>
-	  <!--icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"-->
-	  <!-- <gmap-circle :center="center" :radius="200" :options="currentLocaleCircleOption"> </gmap-circle> -->
+	<!--icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"-->
+	<!-- <gmap-circle :center="center" :radius="200" :options="currentLocaleCircleOption"> </gmap-circle> -->
   </div>
 </template>
 
@@ -49,7 +49,7 @@ export default {
 		google: gmapApi,
 		pickup () { return this.currentRide.location },
 		destination () { return this.currentRide.destination },
-		center() {return this.currentRide.current_locale? this.currentRide.current_locale : { lat: 33.753746, lng: -84.386330 }},
+		center () { return this.currentRide.current_locale ? this.currentRide.current_locale : { lat: 33.753746, lng: -84.386330 } },
 		/* markers () { return [
 			{ latlng: { lat: 33.753746, lng: -84.386330 } },
 			{ latlang: { lat: 33.8463, lng: -84.362 } },
@@ -60,13 +60,13 @@ export default {
 		})
 	},
 	watch: {
-		markers: function( newMarkers, oldMarkers) {
+		markers: function ( newMarkers, oldMarkers) {
 			console.log('watch:markers', newMarkers)
 		},
-		pickup: function() {
+		pickup: function () {
 			this.getLatLng()
 		},
-		destination: function() {
+		destination: function () {
 			this.getLatLng()
 		}
 	},
@@ -100,16 +100,18 @@ export default {
 			}
 		}, */
 		getLatLng: function () {
-			if ( (!this.pickup && !this.destination) || !this.google )
+			if ( (!this.pickup && !this.destination) || !this.google ) {
 				return null
+			}
 
 			const geocoder = new this.google.maps.Geocoder()
 			const locations = [this.pickup, this.destination]
 			const vm = this
 
 			locations.forEach((address, idx) => {
-				if(!address)
+				if (!address) {
 					return
+				}
 
 				geocoder.geocode( { 'address': address }, function (results, status) {
 					if (status === vm.google.maps.GeocoderStatus.OK) {

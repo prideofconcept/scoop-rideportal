@@ -14,7 +14,7 @@ export const stepsOfService = [
 		index: 1,
 		label: 'Navigating to pick-up point',
 		driverDesc: 'Click the navigation link, navigate to pickup point',
-		parentDesc: 'Drvier is enroute to pickup point',
+		parentDesc: 'Driver is en-route to pickup point',
 		isServiceActive: false,
 		isTrackGPS: true,
 	},
@@ -39,7 +39,7 @@ export const stepsOfService = [
 	{
 		id: 'dropoff',
 		index: 4,
-		label: 'Droping off child',
+		label: 'Dropping off child',
 		driverDesc: 'Deliver child safely to drop-off point',
 		parentDesc: 'Driver has arrived, delivering child to drop-off location',
 		isServiceActive: true,
@@ -66,7 +66,7 @@ export const stepsOfService = [
 		isServiceActive: false,
 		isTrackGPS: false,
 		isLastStep: true,
-	},*/
+	}, */
 ]
 
 export const getStepFromId = (id) => ( stepsOfService.filter((step) => (step.id === id))[0] )
