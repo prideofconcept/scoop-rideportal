@@ -49,11 +49,8 @@ export default {
 		google: gmapApi,
 		pickup () { return this.currentRide.location },
 		destination () { return this.currentRide.destination },
+		currRideCurrentLocale () { return this.currentRide.current_locale },
 		center () { return this.currentRide.current_locale ? this.currentRide.current_locale : { lat: 33.753746, lng: -84.386330 } },
-		/* markers () { return [
-			{ latlng: { lat: 33.753746, lng: -84.386330 } },
-			{ latlang: { lat: 33.8463, lng: -84.362 } },
-		]}, */
 		...mapState({
 			currentRide: state => state.ride.currentRide,
 			isDriver: state => state.account.isDriver,
@@ -68,7 +65,16 @@ export default {
 		},
 		destination: function () {
 			this.getLatLng()
-		}
+		},
+		currRideCurrentLocale: function (newCL, oldCL) {
+			console.log('watch:GM:currRideCurrrentLocale', newCL, oldCL)
+		},
+		currentRide: {
+			handler (newCurrentRide, oldCurrentRide) {
+				console.log('watch:GM:currentRide has changed', newCurrentRide.current_locale, oldCurrentRide ? oldCurrentRide.current_locale : null)
+			},
+			deep: true
+		},
 	},
 	mounted () {
 		// console.log('in map pickup, dest ', this.pickup, this.destination)
@@ -79,7 +85,7 @@ export default {
 
 	},
 	updated () {
-		console.log('goodle map comp updated', this.markers)
+		//console.log('goodle map component updated', this.markers)
 	},
 
 	methods: {
