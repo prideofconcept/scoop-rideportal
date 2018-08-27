@@ -120,7 +120,7 @@ export default {
 				if( (!oldCurrentRide && newCurrentRide.currentStep) ||
 					(newCurrentRide.currentStep && newCurrentRide.currentStep !== this.currentStep.id) ) {
 					console.log('watch:currentStepID has changed')
-					this.currentStep = this.getStepFromId( newCurrentRide.currentStep )
+					this.currentStep = this.getStepFromId( newCurrentRide.currentStep ) || this.stepsOfService[0]
 				}
 			},
 			deep: true},

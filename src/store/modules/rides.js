@@ -60,8 +60,8 @@ export default () => ({
 				}, {merge: true})
 		},
 		startRide ({ commit, state }, payload) {
-			const ride = payload
-			console.log('starting ride', ride)
+			const currRide = payload
+			console.log('starting ride', currRide)
 
 			// todo: move to util module
 			const date = new Date()
@@ -70,24 +70,26 @@ export default () => ({
 			})}:${date.getDate()} ${date.toLocaleTimeString()}`
 
 			rideLogCollection
-				.doc(ride.id + ' :: ' + ride.summary)
+				.doc(currRide.id + ' :: activated')
 				.set({
-					url: ride.url,
-					scheduled_time: ride.startdate,
-					id: ride.id,
+					url: currRide.url,
+					scheduled_time: currRide.startdate,
+					id: currRide.id,
 					status: 'activated',
-					start_time: date
+					start_time: date,
+					current_locale: currRide.current_locale || null,
+					guardian: currRide.guardian || null,
 				})
 				.then(() => {
 					commit('reportSaveRideLogSuccess', true)
-					commit('reportRideStart', ride)
+					commit('reportRideStart', currRide)
 				}) // todo: handle errors
 
-			currentRideCollection.doc(`${ride.id}`)
+			currentRideCollection.doc(`${currRide.id}`)
 				.set({
-					...ride,
-					driver: ride.driver,
-					guardian: ride.guardian,
+					...currRide,
+					driver: currRide.driver,
+					guardian: currRide.guardian,
 				})
 		},
 		SET_CURRENT_STEP ({ commit, state }, payload) {
@@ -122,8 +124,8 @@ export default () => ({
 				})
 		},
 		STOP_CURRENT_RIDE ({ commit, state }) {
-			const ride = state.currentRide
-			console.log('stopping ride', ride.id)
+			const currRide = state.currentRide
+			console.log('stopping ride', currRide.id)
 
 			// todo: move to util module
 			const date = new Date()
@@ -132,18 +134,22 @@ export default () => ({
 			})}:${date.getDate()} ${date.toLocaleTimeString()}`
 
 			rideLogCollection
-				.doc(ride.id + ' :: ' + ride.summary)
+				.doc(currRide.id + ' :: complete')
 				.set({
 					status: 'finished',
-					stop_time: date
+					stop_time: date,
+					id: currRide.id,
+					summary: currRide.summary || null,
+					current_locale: currRide.current_locale || null,
+					guardian: currRide.guardian || null,
 				}, {merge: true})
 				.then(() => {
 					commit('reportSaveRideLogSuccess', true)
-					commit('reportRideStop', ride)
+					commit('reportRideStop', currRide)
 				}) // todo: handle errors
 
 			currentRideCollection
-				.doc(`${ride.id}`)
+				.doc(`${currRide.id}`)
 				.delete()
 		},
 		CURRRIDE_UPDATED ({ commit, state }, payload) {
