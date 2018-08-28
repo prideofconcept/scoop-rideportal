@@ -54,10 +54,27 @@ export default () => ({
 			if (!state.currentRide) {
 				return
 			}
+
 			currentRideCollection.doc(state.currentRide.id)
 				.set({
 					current_locale: payload
 				}, {merge: true})
+
+			const date = new Date()
+			const dateString = `${date.toLocaleString('en-us', {
+				month: 'short'
+			})}:${date.getDate()} ${date.toLocaleTimeString()}`
+
+			try{
+				currentRideCollection
+					.doc(`${dateString} ${currRide.id} :: ${currRide.currentStep}`)
+					.update({
+						locale_log: firebase.firestore.FieldValue.arrayUnion(payload)
+					})
+			}
+			catch(e){
+				console.log('error trying to update locale_log',e)
+			}
 		},
 		startRide ({ commit, state }, payload) {
 			const currRide = payload
@@ -70,15 +87,18 @@ export default () => ({
 			})}:${date.getDate()} ${date.toLocaleTimeString()}`
 
 			rideLogCollection
-				.doc(currRide.id + ' :: activated')
+				.doc(`${dateString} ${currRide.id} :: activated`)
 				.set({
 					url: currRide.url,
 					scheduled_time: currRide.startdate,
 					id: currRide.id,
-					status: 'activated',
+					timestamp: new Date(),
+					current_step: 'activated',
 					start_time: date,
+					summary: currRide.summary || null,
 					current_locale: currRide.current_locale || null,
 					guardian: currRide.guardian || null,
+					guardian_flat: currRide.guardian_flat || null,
 				})
 				.then(() => {
 					commit('reportSaveRideLogSuccess', true)
@@ -99,16 +119,23 @@ export default () => ({
 			// commit('reportRideUpdate', {currentStep: currentRideStepId})
 			commit('setCurrentStep', currentRideStepId)
 
+			const date = new Date()
+			const dateString = `${date.toLocaleString('en-us', {
+				month: 'short'
+			})}:${date.getDate()} ${date.toLocaleTimeString()}`
+
 			rideLogCollection
-				.doc(currRide.id + ' :: ' + currRide.currentStep)
+				.doc(`${dateString} ${currRide.id} :: ${currRide.currentStep}`)
 				.set({
 					url: currRide.url || null,
 					timestamp: new Date(),
 					id: currRide.id,
 					summary: currRide.summary || null,
-					status: currentRideStepId || null,
+					current_step: currentRideStepId || null,
 					current_locale: currRide.current_locale || null,
 					guardian: currRide.guardian || null,
+					guardian_flat: currRide.guardian_flat || null,
+					locale_log: [currRide.current_locale || null],
 				})
 				.then(() => {
 					commit('reportSaveRideLogSuccess', true)
@@ -134,14 +161,16 @@ export default () => ({
 			})}:${date.getDate()} ${date.toLocaleTimeString()}`
 
 			rideLogCollection
-				.doc(currRide.id + ' :: complete')
+				.doc(`${dateString} ${currRide.id} :: complete`)
 				.set({
-					status: 'finished',
+					current_step: 'finished',
+					timestamp: new Date(),
 					stop_time: date,
 					id: currRide.id,
 					summary: currRide.summary || null,
 					current_locale: currRide.current_locale || null,
 					guardian: currRide.guardian || null,
+					guardian_flat: currRide.guardian_flat || null,
 				}, {merge: true})
 				.then(() => {
 					commit('reportSaveRideLogSuccess', true)
