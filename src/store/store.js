@@ -101,6 +101,10 @@ export default new Vuex.Store({
 					return true
 				}
 
+				if(ride.recurrence) {
+					return true
+				}
+
 				return false
 			}
 
